@@ -7,10 +7,10 @@ document.addEventListener('DOMContentLoaded', function() {
         leftModuleMode: 'rotate', // Change to 'static' to disable rotation
         activeLeftModule: 'quote', // Used only if mode is 'static'
         quoteUrl: 'https://zenquotes.io/api/quotes/keyword=inspiration&maxLength=150',
-        weatherUrl: '/weather.json',
-        eventsUrl: '/events.json',
-        personalPhotosUrl: '/personal_photos.json',
-        companyPhotosUrl: '/company_art.json',
+        weatherUrl: 'https://api.weatherapi.com/v1/forecast.json?key=YOUR_WEATHERAPI_KEY&q=Lehi&days=1&aqi=yes',
+        eventsUrl: 'https://www.googleapis.com/calendar/v3/calendars/primary/events?key=YOUR_GOOGLE_CALENDAR_API_KEY',
+        personalPhotosUrl: 'https://api.unsplash.com/photos/random?count=10&query=personal&client_id=YOUR_UNSPLASH_ACCESS_KEY',
+        companyPhotosUrl: 'https://api.unsplash.com/photos/random?count=10&query=office&client_id=YOUR_UNSPLASH_ACCESS_KEY',
         personalAlbum: { rotateSpeed: 5000, order: 'random', transition: 'fade', transitionSpeed: 1.5 },
         companyAlbum: { rotateSpeed: 10000, order: 'sequential', transition: 'fade', transitionSpeed: 1.5 },
         statusConfig: {
@@ -72,15 +72,18 @@ document.addEventListener('DOMContentLoaded', function() {
         activeIntervals = [];
     }
 
-    async function fetchWithMock(url, mockData) {
+    async function fetchWithMock(url, mockData = null) {
         try {
             const proxyUrl = `https://cors-anywhere.herokuapp.com/${url}`;
             const response = await fetch(proxyUrl);
-            if (!response.ok) return mockData;
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Request failed with status ${response.status}: ${errorText}`);
+            }
             return await response.json();
-        } catch (error) { 
+        } catch (error) {
             console.error("Fetch error:", error);
-            return mockData; 
+            return mockData;
         }
     }
 
@@ -176,15 +179,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- UI Update Functions ---
     async function updateWeather() {
-        const data = await fetchWithMock(config.weatherUrl, { location: "Lehi", temp: 81, high: 96, low: 62, uvIndex: 5, aqi: 45, humidity: 30, condition: "Sunny" });
-        if (data) {
-            elements.weatherLocation.textContent = data.location || 'Unknown';
-            elements.weatherTemp.textContent = `${data.temp || '--'}°`;
-            elements.weatherHighLow.textContent = `H:${data.high || '--'}° L:${data.low || '--'}°`;
-            elements.uvIndex.textContent = data.uvIndex;
-            elements.aqiValue.textContent = data.aqi;
-            elements.humidityValue.textContent = `${data.humidity}%`;
-            elements.weatherIcon.innerHTML = getWeatherIcon(data.condition);
+        const data = await fetchWithMock(config.weatherUrl);
+        if (data && data.current && data.location) {
+            const forecastDay = data.forecast?.forecastday?.[0]?.day || {};
+            elements.weatherLocation.textContent = data.location.name || 'Unknown';
+            elements.weatherTemp.textContent = `${Math.round(data.current.temp_f)}°`;
+            elements.weatherHighLow.textContent = `H:${Math.round(forecastDay.maxtemp_f || data.current.temp_f)}° L:${Math.round(forecastDay.mintemp_f || data.current.temp_f)}°`;
+            elements.uvIndex.textContent = data.current.uv ?? '--';
+            elements.aqiValue.textContent = data.current.air_quality?.['us-epa-index'] ?? '--';
+            elements.humidityValue.textContent = `${data.current.humidity}%`;
+            elements.weatherIcon.innerHTML = getWeatherIcon(data.current.condition.text);
         }
     }
 
@@ -231,15 +235,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     async function updateEvents() {
-        const mockEvents = [
-            { startTime: "9am", endTime: "10:30am", summary: "Q3 Financial Review & Strategic Planning Session", location: "JN-5th Floor-Wakanda (10) [Neat Bar]" },
-            { startTime: "11:30am", endTime: "12:00pm", summary: "Design Stand-up", location: "Virtual" },
-            { startTime: "11:30am", endTime: "1:00pm", summary: "Mobile Lead 1:1", location: "JN-6th Floor-Fury Road (4)" },
-            { startTime: "11:30am", endTime: "12:30pm", summary: "Server Sync", location: "Conf Room 3" },
-            { startTime: "2pm", endTime: "2:30pm", summary: "Project Sync-Up", location: "Virtual" },
-            { startTime: "2pm", endTime: "3:00pm", summary: "HR Training", location: "Auditorium" }
-        ];
-        currentCalendar = await fetchWithMock(config.eventsUrl, mockEvents);
+        const data = await fetchWithMock(config.eventsUrl);
+        currentCalendar = (data?.items || []).map(event => ({
+            startTime: formatToTime(event.start.dateTime || event.start.date),
+            endTime: formatToTime(event.end.dateTime || event.end.date),
+            summary: event.summary || '',
+            location: event.location || ''
+        }));
         elements.eventsList.innerHTML = '';
         
         if (currentCalendar && currentCalendar.length > 0) {
@@ -260,6 +262,12 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             elements.eventsList.innerHTML = '<li class="text-slate-300 text-center p-4">No upcoming events.</li>';
         }
+    }
+
+    function formatToTime(dateStr) {
+        if (!dateStr) return '';
+        const date = new Date(dateStr);
+        return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }).toLowerCase();
     }
 
     function createEventBubbleHTML(event) {
@@ -303,11 +311,14 @@ document.addEventListener('DOMContentLoaded', function() {
         activeIntervals.push(setInterval(animationCycle, 5000));
     }
     
-    async function createSlideshow(container, settings, photosUrl, mockData) {
+    async function createSlideshow(container, settings, photosUrl, mockData = null) {
         const data = await fetchWithMock(photosUrl, mockData);
-        if (!data || !data.imageUrls || !data.imageUrls.length) return;
-        
-        let imageList = data.imageUrls;
+        let imageList = data?.imageUrls;
+        if (!imageList && Array.isArray(data)) {
+            imageList = data.map(photo => photo.urls?.regular).filter(Boolean);
+        }
+        if (!imageList || !imageList.length) return;
+
         if (settings.order === 'random') imageList.sort(() => Math.random() - 0.5);
         
         container.innerHTML = '';
@@ -346,8 +357,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         await fetchAllData();
         
-        createSlideshow(elements.personalAlbumContainer, config.personalAlbum, config.personalPhotosUrl, { "imageUrls": ["https://images.unsplash.com/photo-1542038784-56eD8DE09313?q=80&w=1854&auto-format=fit=crop", "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=2070&auto-format=fit=crop"] });
-        createSlideshow(elements.companyAlbumContainer, config.companyAlbum, config.companyPhotosUrl, { "imageUrls": ["https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1854&auto-format=fit=crop", "https://images.unsplash.com/photo-1620121692029-d088224ddc74?q=80&w=1932&auto-format=fit=crop"] });
+        createSlideshow(elements.personalAlbumContainer, config.personalAlbum, config.personalPhotosUrl);
+        createSlideshow(elements.companyAlbumContainer, config.companyAlbum, config.companyPhotosUrl);
         
         activeIntervals.push(setInterval(updateClock, 1000));
         activeIntervals.push(setInterval(fetchAllData, config.dataRefreshInterval));
