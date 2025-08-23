@@ -1,5 +1,3 @@
-import './styles.css';
-
 document.addEventListener('DOMContentLoaded', function() {
     
     const config = {
