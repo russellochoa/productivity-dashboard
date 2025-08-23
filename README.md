@@ -13,25 +13,17 @@ This project began as a static HTML page and does not require a heavy front‑en
 
 ## API Configuration
 
-This dashboard relies on several external APIs. Supply the required keys to Vite through a `.env` file in the project root:
-
-```
-VITE_WEATHERAPI_KEY=your_weatherapi_key
-VITE_GOOGLE_CALENDAR_API_KEY=your_google_calendar_api_key
-VITE_UNSPLASH_ACCESS_KEY=your_unsplash_access_key
-```
-
-These variables are read in `src/main.js` via `import.meta.env` and injected at build time.
+This dashboard relies on several external APIs. Replace the placeholder `YOUR_*` values in `src/main.js` with your own keys.
 
 - **Weather**: [WeatherAPI](https://www.weatherapi.com/)
   - Endpoint: `https://api.weatherapi.com/v1/forecast.json`
-  - Key: `VITE_WEATHERAPI_KEY`
+  - Key: `WEATHERAPI_KEY`
 - **Events**: [Google Calendar API](https://developers.google.com/calendar)
   - Endpoint: `https://www.googleapis.com/calendar/v3/calendars/primary/events`
-  - Key: `VITE_GOOGLE_CALENDAR_API_KEY`
+  - Key: `GOOGLE_CALENDAR_API_KEY`
 - **Photos**: [Unsplash API](https://unsplash.com/developers)
   - Endpoint: `https://api.unsplash.com/photos/random`
-  - Key: `VITE_UNSPLASH_ACCESS_KEY`
+  - Key: `UNSPLASH_ACCESS_KEY`
 
 ### CORS
 
