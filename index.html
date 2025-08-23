@@ -338,12 +338,20 @@
         };
 
         let activeIntervals = [];
+        let eventAnimationIntervals = [];
         let currentCalendar = [];
 
         // --- Core Functions ---
         function stopAllIntervals() {
             activeIntervals.forEach(clearInterval);
             activeIntervals = [];
+            eventAnimationIntervals = [];
+        }
+
+        function clearEventAnimationIntervals() {
+            eventAnimationIntervals.forEach(clearInterval);
+            activeIntervals = activeIntervals.filter(id => !eventAnimationIntervals.includes(id));
+            eventAnimationIntervals = [];
         }
 
         async function fetchWithMock(url, mockData) {
@@ -515,6 +523,7 @@
             ];
             currentCalendar = await fetchWithMock(config.eventsUrl, mockEvents);
             elements.eventsList.innerHTML = '';
+            clearEventAnimationIntervals();
             
             if (currentCalendar && currentCalendar.length > 0) {
                 const eventGroups = groupEventsByTime(currentCalendar); 
@@ -574,7 +583,9 @@
             };
             
             animationCycle();
-            activeIntervals.push(setInterval(animationCycle, 5000));
+            const intervalId = setInterval(animationCycle, 5000);
+            activeIntervals.push(intervalId);
+            eventAnimationIntervals.push(intervalId);
         }
         
         async function createSlideshow(container, settings, photosUrl, mockData) {
