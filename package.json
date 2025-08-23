@@ -1,0 +1,16 @@
+{
+  "name": "productivity-dashboard",
+  "version": "1.0.0",
+  "description": "This dashboard relies on several external APIs. Replace the placeholder `YOUR_*` values in `public/main.js` with your own keys.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
