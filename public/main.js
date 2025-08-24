@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         eventsUrl: apiConfig.eventsUrl,
         personalPhotosUrl: apiConfig.personalPhotosUrl,
         companyPhotosUrl: apiConfig.companyPhotosUrl,
+        stockUrl: apiConfig.stockUrl,
+        newsUrl: apiConfig.newsUrl,
         personalAlbum: { rotateSpeed: 5000, order: 'random', transition: 'fade', transitionSpeed: 1.5 },
         companyAlbum: { rotateSpeed: 10000, order: 'sequential', transition: 'fade', transitionSpeed: 1.5 },
         statusConfig: {
@@ -227,17 +229,32 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     
     async function updateStock() {
-        const mockData = { price: 543.21, change: 1.23, changePercent: 0.23 };
-        elements.stockPrice.textContent = mockData.price.toFixed(2);
-        const changeSign = mockData.change > 0 ? '+' : '';
-        elements.stockChange.textContent = `${changeSign}${mockData.change.toFixed(2)} (${changeSign}${mockData.changePercent.toFixed(2)}%)`;
-        elements.stockChange.className = `text-[1.8vh] stock-change ${mockData.change > 0 ? 'positive' : 'negative'}`;
+        const data = await fetchWithMock(config.stockUrl);
+        const quote = data?.['Global Quote'];
+        const price = parseFloat(quote?.['05. price']);
+        const change = parseFloat(quote?.['09. change']);
+        const changePercent = parseFloat(quote?.['10. change percent']);
+        if (quote && !isNaN(price) && !isNaN(change) && !isNaN(changePercent)) {
+            elements.stockPrice.textContent = price.toFixed(2);
+            const changeSign = change > 0 ? '+' : '';
+            elements.stockChange.textContent = `${changeSign}${change.toFixed(2)} (${changeSign}${changePercent.toFixed(2)}%)`;
+            elements.stockChange.className = `text-[1.8vh] stock-change ${change > 0 ? 'positive' : 'negative'}`;
+        } else {
+            elements.stockPrice.textContent = '--';
+            elements.stockChange.textContent = 'Data unavailable';
+            elements.stockChange.className = 'text-[1.8vh] stock-change';
+        }
     }
-    
-    function updateNews() {
-        const mockHeadlines = ["Global Tech Summit Announces Breakthrough in AI.", "New Space Telescope Reveals Secrets of Distant Galaxies.", "Artists and Engineers Collaborate on Immersive Digital Art."];
-        const headlineIndex = Math.floor((Date.now() / (30 * 60 * 1000)) % mockHeadlines.length);
-        elements.newsHeadline.textContent = mockHeadlines[headlineIndex];
+
+    async function updateNews() {
+        const data = await fetchWithMock(config.newsUrl);
+        const headlines = data?.articles || [];
+        if (headlines.length > 0) {
+            const index = Math.floor((Date.now() / (30 * 60 * 1000)) % headlines.length);
+            elements.newsHeadline.textContent = headlines[index].title || 'News unavailable';
+        } else {
+            elements.newsHeadline.textContent = 'News unavailable';
+        }
     }
 
 
@@ -394,20 +411,20 @@ document.addEventListener('DOMContentLoaded', async function() {
         elements.profileImage.src = config.profileImageUrl;
     }
 
-    function updateLeftModule() {
+    async function updateLeftModule() {
         elements.quoteModule.style.display = 'none';
         elements.stockModule.style.display = 'none';
         elements.newsModule.style.display = 'none';
 
         if (config.activeLeftModule === 'quote') {
             elements.quoteModule.style.display = 'flex';
-            updateQuote();
+            await updateQuote();
         } else if (config.activeLeftModule === 'stock') {
             elements.stockModule.style.display = 'flex';
-            updateStock();
+            await updateStock();
         } else if (config.activeLeftModule === 'news') {
             elements.newsModule.style.display = 'flex';
-            updateNews();
+            await updateNews();
         }
     }
 

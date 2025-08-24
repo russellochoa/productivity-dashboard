@@ -15,6 +15,8 @@ WEATHER_URL=
 EVENTS_URL=
 PERSONAL_PHOTOS_URL=
 COMPANY_PHOTOS_URL=
+STOCK_URL=
+NEWS_URL=
 ```
 
 ### `config.json`
@@ -27,7 +29,9 @@ Alternatively, create a `config.json` file at the project root:
   "weatherUrl": "...",
   "eventsUrl": "...",
   "personalPhotosUrl": "...",
-  "companyPhotosUrl": "..."
+  "companyPhotosUrl": "...",
+  "stockUrl": "...",
+  "newsUrl": "..."
 }
 ```
 
@@ -42,6 +46,12 @@ Both `.env` and `config.json` are ignored by git to keep secrets local.
 - **Photos**: [Unsplash API](https://unsplash.com/developers)
   - Endpoint: `https://api.unsplash.com/photos/random`
   - Key: `UNSPLASH_ACCESS_KEY`
+- **Stocks**: [Alpha Vantage](https://www.alphavantage.co/)
+  - Endpoint: `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=IBM&apikey=YOUR_KEY`
+  - Key: `ALPHAVANTAGE_API_KEY`
+- **News**: [NewsAPI](https://newsapi.org/)
+  - Endpoint: `https://newsapi.org/v2/top-headlines?country=us&apiKey=YOUR_KEY`
+  - Key: `NEWSAPI_KEY`
 
 ### CORS
 

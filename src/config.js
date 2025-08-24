@@ -5,14 +5,18 @@ export async function loadConfig() {
     env.WEATHER_URL ||
     env.EVENTS_URL ||
     env.PERSONAL_PHOTOS_URL ||
-    env.COMPANY_PHOTOS_URL
+    env.COMPANY_PHOTOS_URL ||
+    env.STOCK_URL ||
+    env.NEWS_URL
   ) {
     return {
       quoteUrl: env.QUOTE_URL,
       weatherUrl: env.WEATHER_URL,
       eventsUrl: env.EVENTS_URL,
       personalPhotosUrl: env.PERSONAL_PHOTOS_URL,
-      companyPhotosUrl: env.COMPANY_PHOTOS_URL
+      companyPhotosUrl: env.COMPANY_PHOTOS_URL,
+      stockUrl: env.STOCK_URL,
+      newsUrl: env.NEWS_URL
     };
   }
 
