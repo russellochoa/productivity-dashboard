@@ -127,17 +127,20 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         evaluate() {
             const now = new Date();
-            const currentHour = now.getHours();
             const currentEvent = this.getCurrentEvent(now);
-            if (currentEvent) {
-                this.setStatus(this.getStatusFromEvent(currentEvent));
-                return;
-            }
-            this.setStatus(this.getFallbackStatus(currentHour));
+            const status = currentEvent
+                ? this.getStatusFromEvent(currentEvent)
+                : this.getFallbackStatus(now.getHours());
+            this.setStatus(status);
         },
-        
+
         getCurrentEvent(now) {
-            return null; 
+            for (const event of currentCalendar) {
+                if (event.start && event.end && now >= event.start && now <= event.end) {
+                    return event;
+                }
+            }
+            return null;
         },
 
         getStatusFromEvent(event) {
@@ -240,16 +243,22 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     async function updateEvents() {
         const data = await fetchWithMock(config.eventsUrl);
-        currentCalendar = (data?.items || []).map(event => ({
-            startTime: formatToTime(event.start.dateTime || event.start.date),
-            endTime: formatToTime(event.end.dateTime || event.end.date),
-            summary: event.summary || '',
-            location: event.location || ''
-        }));
+        currentCalendar = (data?.items || []).map(event => {
+            const start = new Date(event.start.dateTime || event.start.date);
+            const end = new Date(event.end.dateTime || event.end.date);
+            return {
+                start,
+                end,
+                startTime: formatToTime(start),
+                endTime: formatToTime(end),
+                summary: event.summary || '',
+                location: event.location || ''
+            };
+        });
         elements.eventsList.innerHTML = '';
         
         if (currentCalendar && currentCalendar.length > 0) {
-            const eventGroups = groupEventsByTime(currentCalendar); 
+            const eventGroups = groupEventsByTime(currentCalendar);
             eventGroups.slice(0, 3).forEach(group => {
                 const li = document.createElement('li');
                 if (group.length > 1) {
@@ -266,6 +275,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         } else {
             elements.eventsList.innerHTML = '<li class="text-slate-300 text-center p-4">No upcoming events.</li>';
         }
+        statusManager.evaluate();
     }
 
     function formatToTime(dateStr) {
