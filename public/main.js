@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     async function fetchWithMock(url, mockData = null) {
         try {
-            const proxyUrl = `https://cors-anywhere.herokuapp.com/${url}`;
+            const proxyUrl = `/api/proxy?url=${encodeURIComponent(url)}`;
             const response = await fetch(proxyUrl);
             if (!response.ok) {
                 const errorText = await response.text();
