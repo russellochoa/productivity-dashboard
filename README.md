@@ -2,7 +2,36 @@
 
 ## API Configuration
 
-This dashboard relies on several external APIs. Replace the placeholder `YOUR_*` values in `public/main.js` with your own keys.
+This dashboard relies on several external APIs. API keys and endpoints are read from a configuration module at runtime.
+Provide these values via environment variables or a local `config.json` file.
+
+### Environment variables
+
+Create a `.env` file and define the following values. Ensure your build process exposes them to the browser environment.
+
+```
+QUOTE_URL=
+WEATHER_URL=
+EVENTS_URL=
+PERSONAL_PHOTOS_URL=
+COMPANY_PHOTOS_URL=
+```
+
+### `config.json`
+
+Alternatively, create a `config.json` file at the project root:
+
+```
+{
+  "quoteUrl": "...",
+  "weatherUrl": "...",
+  "eventsUrl": "...",
+  "personalPhotosUrl": "...",
+  "companyPhotosUrl": "..."
+}
+```
+
+Both `.env` and `config.json` are ignored by git to keep secrets local.
 
 - **Weather**: [WeatherAPI](https://www.weatherapi.com/)
   - Endpoint: `https://api.weatherapi.com/v1/forecast.json`

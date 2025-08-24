@@ -1,4 +1,8 @@
-document.addEventListener('DOMContentLoaded', function() {
+import { loadConfig } from '../src/config.js';
+
+document.addEventListener('DOMContentLoaded', async function() {
+
+    const apiConfig = await loadConfig();
     
     const config = {
         dashboardTitle: "Russell's Desk",
@@ -6,11 +10,11 @@ document.addEventListener('DOMContentLoaded', function() {
         dataRefreshInterval: 15 * 60 * 1000,
         leftModuleMode: 'rotate', // Change to 'static' to disable rotation
         activeLeftModule: 'quote', // Used only if mode is 'static'
-        quoteUrl: 'https://zenquotes.io/api/quotes/keyword=inspiration&maxLength=150',
-        weatherUrl: 'https://api.weatherapi.com/v1/forecast.json?key=YOUR_WEATHERAPI_KEY&q=Lehi&days=1&aqi=yes',
-        eventsUrl: 'https://www.googleapis.com/calendar/v3/calendars/primary/events?key=YOUR_GOOGLE_CALENDAR_API_KEY',
-        personalPhotosUrl: 'https://api.unsplash.com/photos/random?count=10&query=personal&client_id=YOUR_UNSPLASH_ACCESS_KEY',
-        companyPhotosUrl: 'https://api.unsplash.com/photos/random?count=10&query=office&client_id=YOUR_UNSPLASH_ACCESS_KEY',
+        quoteUrl: apiConfig.quoteUrl,
+        weatherUrl: apiConfig.weatherUrl,
+        eventsUrl: apiConfig.eventsUrl,
+        personalPhotosUrl: apiConfig.personalPhotosUrl,
+        companyPhotosUrl: apiConfig.companyPhotosUrl,
         personalAlbum: { rotateSpeed: 5000, order: 'random', transition: 'fade', transitionSpeed: 1.5 },
         companyAlbum: { rotateSpeed: 10000, order: 'sequential', transition: 'fade', transitionSpeed: 1.5 },
         statusConfig: {
