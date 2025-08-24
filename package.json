@@ -1,0 +1,17 @@
+{
+  "name": "productivity-dashboard",
+  "version": "1.0.0",
+  "description": "This dashboard relies on several external APIs. API keys and endpoints are read from a configuration module at runtime. Provide these values via environment variables or a local `config.json` file.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}

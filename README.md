@@ -53,6 +53,12 @@ Both `.env` and `config.json` are ignored by git to keep secrets local.
   - Endpoint: `https://newsapi.org/v2/top-headlines?country=us&apiKey=YOUR_KEY`
   - Key: `NEWSAPI_KEY`
 
-### CORS
+### Local proxy
 
-Requests are proxied through `https://cors-anywhere.herokuapp.com/`. You may need to request temporary access from that service for local development or configure your own proxy.
+Run the built-in Node server to serve the dashboard and forward API requests with appropriate CORS headers:
+
+1. Install dependencies: `npm install`
+2. Start the server: `npm start`
+3. Access the app at `http://localhost:3000`
+
+The client fetches data through `/api/proxy?url=...`, which relays requests to the configured third-party APIs.
