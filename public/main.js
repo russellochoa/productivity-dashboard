@@ -105,6 +105,24 @@ document.addEventListener('DOMContentLoaded', async function() {
         elements.date.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
     }
 
+    function fitText(el, maxVH, minVH) {
+        if (!el) return;
+        let size = maxVH;
+        el.style.fontSize = `${size}vh`;
+        el.style.wordBreak = 'break-word';
+        while (size > minVH && el.scrollHeight > el.parentElement.clientHeight) {
+            size -= 0.1;
+            el.style.fontSize = `${size}vh`;
+        }
+        if (el.scrollHeight > el.parentElement.clientHeight) {
+            let text = el.textContent;
+            while (text.length > 0 && el.scrollHeight > el.parentElement.clientHeight) {
+                text = text.trim().slice(0, -1);
+                el.textContent = text + '…';
+            }
+        }
+    }
+
     async function updateQuote() {
         try {
             const { text, author } = await fetch(config.quoteUrl).then(r => r.json());
@@ -115,6 +133,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             elements.quoteText.textContent = "--";
             elements.quoteAuthor.textContent = "";
         }
+        fitText(elements.quoteText, 2.5, 1.2);
     }
 
       async function updateStock() {
@@ -160,9 +179,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     function rotateNews() {
         if (newsArticles.length === 0) {
             elements.newsHeadline.textContent = 'News unavailable';
+            fitText(elements.newsHeadline, 2.5, 1.2);
             return;
         }
         elements.newsHeadline.textContent = newsArticles[newsIndex]?.title || 'News unavailable';
+        fitText(elements.newsHeadline, 2.5, 1.2);
         newsIndex = (newsIndex + 1) % newsArticles.length;
     }
 
