@@ -50,6 +50,7 @@ Both `.env` and `config.json` are ignored by git to keep secrets local.
 - **News**: [NewsAPI](https://newsapi.org/)
   - Endpoint: `https://newsapi.org/v2/top-headlines?country=us&apiKey=YOUR_KEY`
   - Key: `NEWSAPI_KEY`
+  - Set `NEWSAPI_KEY` in the server environment; the Node server reads this value when handling `/api/news` requests.
 
 ### Local proxy
 
