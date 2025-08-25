@@ -170,3 +170,5 @@ body {
 .album-container.transition-slide img { transition: transform 1s ease-in-out; }
 .album-container.transition-zoom img.active { transform: scale(1.1); }
 
+#stock-card.up  #stock-delta { color: #0aa80a; }
+#stock-card.down #stock-delta { color: #d93025; }
