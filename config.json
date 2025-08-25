@@ -1,10 +1,10 @@
 {
   "proxyBaseUrl": "https://vercel-proxy-bananadona.vercel.app",
-  "quoteUrl": "...",
+  "quoteUrl": "https://vercel-proxy-bananadona.vercel.app/api/quote",
   "weatherUrl": "...",
   "eventsUrl": "...",
   "personalPhotosUrl": "...",
   "companyPhotosUrl": "...",
-  "stockUrl": "...",
-  "newsUrl": "..."
+  "stockUrl": "https://vercel-proxy-bananadona.vercel.app/api/stock",
+  "newsUrl": "https://vercel-proxy-bananadona.vercel.app/api/news"
 }
