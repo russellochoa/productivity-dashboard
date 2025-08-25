@@ -192,14 +192,21 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     function rotateNews() {
-        if (newsArticles.length === 0) {
+        try {
+            if (newsArticles.length === 0) {
+                elements.newsHeadline.textContent = 'News unavailable';
+                fitText(elements.newsHeadline, 2.5, 1.2);
+                return;
+            }
+            elements.newsHeadline.textContent = newsArticles[newsIndex]?.title || 'News unavailable';
+            fitText(elements.newsHeadline, 2.5, 1.2);
+            newsIndex = (newsIndex + 1) % newsArticles.length;
+        } catch (error) {
             elements.newsHeadline.textContent = 'News unavailable';
             fitText(elements.newsHeadline, 2.5, 1.2);
+            console.error(error);
             return;
         }
-        elements.newsHeadline.textContent = newsArticles[newsIndex]?.title || 'News unavailable';
-        fitText(elements.newsHeadline, 2.5, 1.2);
-        newsIndex = (newsIndex + 1) % newsArticles.length;
     }
 
     elements.newsMode.addEventListener('change', (e) => {
