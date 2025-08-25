@@ -187,6 +187,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             console.error('Fetch error:', error);
             newsArticles = [];
             elements.newsHeadline.textContent = 'News unavailable';
+            fitText(elements.newsHeadline, 2.5, 1.2);
         }
     }
 
