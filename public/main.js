@@ -111,35 +111,35 @@ document.addEventListener('DOMContentLoaded', async function() {
             elements.quoteText.textContent = text || "--";
             elements.quoteAuthor.textContent = author ? `- ${author}` : "";
         } catch (error) {
-            console.error('Fetch error:', error);
+            console.error('Error updating quote:', error);
             elements.quoteText.textContent = "--";
             elements.quoteAuthor.textContent = "";
         }
     }
 
-      async function updateStock() {
-          try {
-              const { price, change, changePct } = await fetch(config.stockUrl).then(r => r.json());
-              const parsedPrice = parseFloat(price);
-              const parsedChange = parseFloat(change);
-              const parsedChangePct = parseFloat(changePct);
-              if (isNaN(parsedPrice) || isNaN(parsedChange) || isNaN(parsedChangePct)) {
-                  elements.stockPrice.textContent = '--';
-                  elements.stockChange.textContent = '--';
-                  elements.stockChange.className = 'text-[1.8vh] stock-change';
-                  return;
-              }
-              elements.stockPrice.textContent = parsedPrice.toFixed(2);
-              const changeSign = parsedChange > 0 ? '+' : '';
-              elements.stockChange.textContent = `${changeSign}${parsedChange.toFixed(2)} (${changeSign}${parsedChangePct.toFixed(2)}%)`;
-              elements.stockChange.className = `text-[1.8vh] stock-change ${parsedChange > 0 ? 'positive' : 'negative'}`;
-          } catch (error) {
-              console.error('Fetch error:', error);
-              elements.stockPrice.textContent = '--';
-              elements.stockChange.textContent = '--';
-              elements.stockChange.className = 'text-[1.8vh] stock-change';
-          }
-      }
+    async function updateStock() {
+        try {
+            const { price, change, changePct } = await fetch(config.stockUrl).then(r => r.json());
+            const parsedPrice = parseFloat(price);
+            const parsedChange = parseFloat(change);
+            const parsedChangePct = parseFloat(changePct);
+            if (isNaN(parsedPrice) || isNaN(parsedChange) || isNaN(parsedChangePct)) {
+                elements.stockPrice.textContent = '--';
+                elements.stockChange.textContent = '';
+                elements.stockChange.className = 'text-[1.8vh] stock-change';
+                return;
+            }
+            elements.stockPrice.textContent = parsedPrice.toFixed(2);
+            const changeSign = parsedChange > 0 ? '+' : '';
+            elements.stockChange.textContent = `${changeSign}${parsedChange.toFixed(2)} (${changeSign}${parsedChangePct.toFixed(2)}%)`;
+            elements.stockChange.className = `text-[1.8vh] stock-change ${parsedChange > 0 ? 'positive' : 'negative'}`;
+        } catch (error) {
+            console.error('Error updating stock:', error);
+            elements.stockPrice.textContent = '--';
+            elements.stockChange.textContent = '';
+            elements.stockChange.className = 'text-[1.8vh] stock-change';
+        }
+    }
 
     async function fetchNews(mode) {
         try {
@@ -151,19 +151,24 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
             rotateNews();
         } catch (error) {
-            console.error('Fetch error:', error);
+            console.error('Error fetching news:', error);
             newsArticles = [];
             elements.newsHeadline.textContent = 'News unavailable';
         }
     }
 
     function rotateNews() {
-        if (newsArticles.length === 0) {
+        try {
+            if (newsArticles.length === 0) {
+                elements.newsHeadline.textContent = 'News unavailable';
+                return;
+            }
+            elements.newsHeadline.textContent = newsArticles[newsIndex]?.title || 'News unavailable';
+            newsIndex = (newsIndex + 1) % newsArticles.length;
+        } catch (error) {
+            console.error('Error rotating news:', error);
             elements.newsHeadline.textContent = 'News unavailable';
-            return;
         }
-        elements.newsHeadline.textContent = newsArticles[newsIndex]?.title || 'News unavailable';
-        newsIndex = (newsIndex + 1) % newsArticles.length;
     }
 
     elements.newsMode.addEventListener('change', (e) => {
