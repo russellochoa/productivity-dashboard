@@ -37,7 +37,7 @@ Alternatively, create a `config.json` file at the project root:
 
 Both `.env` and `config.json` are ignored by git to keep secrets local.
 
-- **Weather**: Browser requests are proxied through `https://vercel-proxy-bananadona.vercel.app/api/weather`. No API keys are stored in this repo.
+- **Weather**: Requests use the `WEATHER_URL` endpoint directly. No API keys are stored in this repo.
 - **Events**: [Google Calendar API](https://developers.google.com/calendar)
   - Endpoint: `https://www.googleapis.com/calendar/v3/calendars/primary/events`
   - Key: `GOOGLE_CALENDAR_API_KEY`
@@ -59,4 +59,4 @@ Run the built-in Node server to serve the dashboard and forward API requests wit
 2. Start the server: `npm start`
 3. Access the app at `http://localhost:3000`
 
-The client fetches data through `/api/proxy?url=...`, which relays requests to the configured third-party APIs. Other modules may still use `/api/proxy`, but weather requests should call `/api/weather`, which forwards to the dedicated proxy endpoint.
+The client can forward requests through `/api/proxy?url=...` for generic third-party APIs. `/api/news` is available for NewsAPI calls. Weather requests bypass the proxy and use `WEATHER_URL` directly.
