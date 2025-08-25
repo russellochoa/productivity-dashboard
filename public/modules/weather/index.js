@@ -14,9 +14,22 @@ export async function updateWeather(config, elements) {
             elements.aqiValue.textContent = data.current.air_quality?.['us-epa-index'] ?? '--';
             elements.humidityValue.textContent = `${data.current.humidity}%`;
             elements.weatherIcon.innerHTML = getWeatherIcon(data.current.condition.text);
+        } else {
+            resetFields();
         }
     } catch (error) {
         console.error('Weather fetch error:', error);
+        resetFields();
+    }
+
+    function resetFields() {
+        elements.weatherLocation.textContent = 'Unknown';
+        elements.weatherTemp.textContent = '--';
+        elements.weatherHighLow.textContent = 'H:-- L:--';
+        elements.uvIndex.textContent = '--';
+        elements.aqiValue.textContent = '--';
+        elements.humidityValue.textContent = '--';
+        elements.weatherIcon.innerHTML = '';
     }
 }
 
