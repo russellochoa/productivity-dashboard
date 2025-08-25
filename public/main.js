@@ -102,26 +102,38 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     async function updateQuote() {
-        const mockData = [{ q: 'The journey of a thousand miles begins with a single step.', a: 'Lao Tzu' }];
-        const data = await fetchWithMock(config.quoteUrl, mockData);
-        if (data && data[0] && data[0].q) {
-            elements.quoteText.textContent = `"${data[0].q}"`;
-            elements.quoteAuthor.textContent = `- ${data[0].a || 'Unknown'}`;
+        try {
+            const response = await fetch(config.quoteUrl);
+            const data = await response.json();
+            if (data && data[0] && data[0].q) {
+                elements.quoteText.textContent = `"${data[0].q}"`;
+                elements.quoteAuthor.textContent = `- ${data[0].a || 'Unknown'}`;
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
         }
     }
 
     async function updateStock() {
-        const data = await fetchWithMock(config.stockUrl);
-        const quote = data?.['Global Quote'];
-        const price = parseFloat(quote?.['05. price']);
-        const change = parseFloat(quote?.['09. change']);
-        const changePercent = parseFloat(quote?.['10. change percent']);
-        if (quote && !isNaN(price) && !isNaN(change) && !isNaN(changePercent)) {
-            elements.stockPrice.textContent = price.toFixed(2);
-            const changeSign = change > 0 ? '+' : '';
-            elements.stockChange.textContent = `${changeSign}${change.toFixed(2)} (${changeSign}${changePercent.toFixed(2)}%)`;
-            elements.stockChange.className = `text-[1.8vh] stock-change ${change > 0 ? 'positive' : 'negative'}`;
-        } else {
+        try {
+            const response = await fetch(config.stockUrl);
+            const data = await response.json();
+            const quote = data?.['Global Quote'];
+            const price = parseFloat(quote?.['05. price']);
+            const change = parseFloat(quote?.['09. change']);
+            const changePercent = parseFloat(quote?.['10. change percent']);
+            if (quote && !isNaN(price) && !isNaN(change) && !isNaN(changePercent)) {
+                elements.stockPrice.textContent = price.toFixed(2);
+                const changeSign = change > 0 ? '+' : '';
+                elements.stockChange.textContent = `${changeSign}${change.toFixed(2)} (${changeSign}${changePercent.toFixed(2)}%)`;
+                elements.stockChange.className = `text-[1.8vh] stock-change ${change > 0 ? 'positive' : 'negative'}`;
+            } else {
+                elements.stockPrice.textContent = '--';
+                elements.stockChange.textContent = 'Data unavailable';
+                elements.stockChange.className = 'text-[1.8vh] stock-change';
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
             elements.stockPrice.textContent = '--';
             elements.stockChange.textContent = 'Data unavailable';
             elements.stockChange.className = 'text-[1.8vh] stock-change';
@@ -129,12 +141,19 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     async function updateNews() {
-        const data = await fetchWithMock(config.newsUrl);
-        const headlines = data?.articles || [];
-        if (headlines.length > 0) {
-            const index = Math.floor((Date.now() / (30 * 60 * 1000)) % headlines.length);
-            elements.newsHeadline.textContent = headlines[index].title || 'News unavailable';
-        } else {
+        const currentMode = config.leftModuleMode;
+        try {
+            const response = await fetch(`${config.newsUrl}?mode=${currentMode}`);
+            const data = await response.json();
+            const headlines = data?.articles || [];
+            if (headlines.length > 0) {
+                const index = Math.floor((Date.now() / (30 * 60 * 1000)) % headlines.length);
+                elements.newsHeadline.textContent = headlines[index].title || 'News unavailable';
+            } else {
+                elements.newsHeadline.textContent = 'News unavailable';
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
             elements.newsHeadline.textContent = 'News unavailable';
         }
     }
