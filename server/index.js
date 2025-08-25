@@ -1,10 +1,13 @@
 const express = require('express');
+const newsProxy = require('./news');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Serve static files from the project root
 app.use(express.static('.'));
+
+app.get('/api/news', newsProxy);
 
 app.get('/api/proxy', async (req, res) => {
   const targetUrl = req.query.url;
