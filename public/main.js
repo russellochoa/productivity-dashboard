@@ -108,18 +108,18 @@ document.addEventListener('DOMContentLoaded', async function() {
         elements.date.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
     }
 
-    function fitText(el, maxVH, minVH) {
+    function fitText(el, maxVH, minVH, container = el.parentElement) {
         if (!el) return;
         let size = maxVH;
         el.style.fontSize = `${size}vh`;
         el.style.wordBreak = 'break-word';
-        while (size > minVH && el.scrollHeight > el.parentElement.clientHeight) {
+        while (size > minVH && container.scrollHeight > container.clientHeight) {
             size -= 0.1;
             el.style.fontSize = `${size}vh`;
         }
-        if (el.scrollHeight > el.parentElement.clientHeight) {
+        if (container.scrollHeight > container.clientHeight) {
             let text = el.textContent;
-            while (text.length > 0 && el.scrollHeight > el.parentElement.clientHeight) {
+            while (text.length > 0 && container.scrollHeight > container.clientHeight) {
                 text = text.trim().slice(0, -1);
                 el.textContent = text + '…';
             }
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     function renderQuote() {
         elements.quoteText.textContent = lastQuote?.text || "--";
         elements.quoteAuthor.textContent = lastQuote?.author ? `- ${lastQuote.author}` : "";
-        fitText(elements.quoteText, 2.5, 1.2);
+        fitText(elements.quoteText, 2.5, 1.2, elements.quoteModule);
     }
 
     async function updateQuote() {
@@ -187,7 +187,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             console.error('Fetch error:', error);
             newsArticles = [];
             elements.newsHeadline.textContent = 'News unavailable';
-            fitText(elements.newsHeadline, 2.5, 1.2);
+            fitText(elements.newsHeadline, 2.5, 1.2, elements.newsModule);
+            fitText(elements.newsMode, 2, 1.2, elements.newsModule);
         }
     }
 
@@ -195,15 +196,18 @@ document.addEventListener('DOMContentLoaded', async function() {
         try {
             if (newsArticles.length === 0) {
                 elements.newsHeadline.textContent = 'News unavailable';
-                fitText(elements.newsHeadline, 2.5, 1.2);
+                fitText(elements.newsHeadline, 2.5, 1.2, elements.newsModule);
+                fitText(elements.newsMode, 2, 1.2, elements.newsModule);
                 return;
             }
             elements.newsHeadline.textContent = newsArticles[newsIndex]?.title || 'News unavailable';
-            fitText(elements.newsHeadline, 2.5, 1.2);
+            fitText(elements.newsHeadline, 2.5, 1.2, elements.newsModule);
+            fitText(elements.newsMode, 2, 1.2, elements.newsModule);
             newsIndex = (newsIndex + 1) % newsArticles.length;
         } catch (error) {
             elements.newsHeadline.textContent = 'News unavailable';
-            fitText(elements.newsHeadline, 2.5, 1.2);
+            fitText(elements.newsHeadline, 2.5, 1.2, elements.newsModule);
+            fitText(elements.newsMode, 2, 1.2, elements.newsModule);
             console.error(error);
             return;
         }

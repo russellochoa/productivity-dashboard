@@ -96,6 +96,8 @@ body {
     position: absolute;
     inset: 0;
     display: none;
+    padding: 0.75rem;
+    box-sizing: border-box;
 }
 #info-module > div.active {
     display: flex;
