@@ -133,19 +133,20 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     async function updateQuote() {
-        if (Date.now() - lastQuoteTime < 30 * 60 * 1000 && lastQuote) {
-            renderQuote();
-            return;
-        }
         try {
+            if (Date.now() - lastQuoteTime < 30 * 60 * 1000 && lastQuote) {
+                renderQuote();
+                return;
+            }
             const { text, author } = await fetch(config.quoteUrl).then(r => r.json());
             lastQuote = { text, author };
             lastQuoteTime = Date.now();
+            renderQuote();
         } catch (error) {
-            console.error('Fetch error:', error);
+            console.error('Error updating quote:', error);
             lastQuote = { text: "--", author: "" };
+            renderQuote();
         }
-        renderQuote();
     }
 
       async function updateStock() {
