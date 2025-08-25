@@ -1,5 +1,9 @@
 # Productivity Dashboard
 
+## Requirements
+
+- Node.js 18 or later. The server uses the built-in `fetch` API available in Node 18+.
+
 ## API Configuration
 
 This dashboard relies on several external APIs. API keys and endpoints are read from a configuration module at runtime.
