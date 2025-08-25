@@ -98,6 +98,31 @@
         </div>
     </div>
 
+    <div id="extra-widgets">
+        <div id="spy-widget" class="dashboard-module p-3">
+            <h3 class="module-title text-[2vh]">SPY</h3>
+            <div class="text-center">
+                <p id="spy-price" class="text-[2vh]">---.--</p>
+                <p id="spy-change" class="text-[1.8vh]">-.-- (-.--%)</p>
+            </div>
+        </div>
+        <div id="news-widget" class="dashboard-module p-3">
+            <div class="flex items-center justify-between mb-2">
+                <h3 class="module-title text-[2vh]">News</h3>
+                <select id="news-mode" class="text-black text-[1.4vh] rounded">
+                    <option value="headlines">Headlines</option>
+                    <option value="ai">AI</option>
+                    <option value="politics">Politics</option>
+                </select>
+            </div>
+            <p id="news-headline-placeholder" class="text-[1.7vh] leading-tight font-light text-slate-200 flex-grow text-center"></p>
+        </div>
+        <div id="quote-widget" class="dashboard-module p-3">
+            <p id="quote-widget-text" class="text-[1.7vh] leading-tight font-light text-slate-200 flex-grow"></p>
+            <p id="quote-widget-author" class="text-right text-slate-400 text-[1.4vh] mt-2"></p>
+        </div>
+    </div>
+
     <script type="module" src="public/main.js"></script>
 </body>
 </html>
