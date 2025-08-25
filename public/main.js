@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         try {
             const response = await fetch(`${config.newsUrl}?mode=${mode}`);
             const data = await response.json();
-            newsArticles = data?.articles || [];
+            newsArticles = Array.isArray(data) ? data : (data?.articles || []);
             if (newsIndex >= newsArticles.length) {
                 newsIndex = 0;
             }
