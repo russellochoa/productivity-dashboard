@@ -113,31 +113,29 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 
-    async function updateStock() {
-        try {
-            const response = await fetch(config.stockUrl);
-            const data = await response.json();
-            const quote = data?.['Global Quote'];
-            const price = parseFloat(quote?.['05. price']);
-            const change = parseFloat(quote?.['09. change']);
-            const changePercent = parseFloat(quote?.['10. change percent']);
-            if (quote && !isNaN(price) && !isNaN(change) && !isNaN(changePercent)) {
-                elements.stockPrice.textContent = price.toFixed(2);
-                const changeSign = change > 0 ? '+' : '';
-                elements.stockChange.textContent = `${changeSign}${change.toFixed(2)} (${changeSign}${changePercent.toFixed(2)}%)`;
-                elements.stockChange.className = `text-[1.8vh] stock-change ${change > 0 ? 'positive' : 'negative'}`;
-            } else {
-                elements.stockPrice.textContent = '--';
-                elements.stockChange.textContent = 'Data unavailable';
-                elements.stockChange.className = 'text-[1.8vh] stock-change';
-            }
-        } catch (error) {
-            console.error('Fetch error:', error);
-            elements.stockPrice.textContent = '--';
-            elements.stockChange.textContent = 'Data unavailable';
-            elements.stockChange.className = 'text-[1.8vh] stock-change';
-        }
-    }
+      async function updateStock() {
+          try {
+              const { price, change, changePct } = await fetch(config.stockUrl).then(r => r.json());
+              const parsedPrice = parseFloat(price);
+              const parsedChange = parseFloat(change);
+              const parsedChangePct = parseFloat(changePct);
+              if (isNaN(parsedPrice) || isNaN(parsedChange) || isNaN(parsedChangePct)) {
+                  elements.stockPrice.textContent = '--';
+                  elements.stockChange.textContent = '--';
+                  elements.stockChange.className = 'text-[1.8vh] stock-change';
+                  return;
+              }
+              elements.stockPrice.textContent = parsedPrice.toFixed(2);
+              const changeSign = parsedChange > 0 ? '+' : '';
+              elements.stockChange.textContent = `${changeSign}${parsedChange.toFixed(2)} (${changeSign}${parsedChangePct.toFixed(2)}%)`;
+              elements.stockChange.className = `text-[1.8vh] stock-change ${parsedChange > 0 ? 'positive' : 'negative'}`;
+          } catch (error) {
+              console.error('Fetch error:', error);
+              elements.stockPrice.textContent = '--';
+              elements.stockChange.textContent = '--';
+              elements.stockChange.className = 'text-[1.8vh] stock-change';
+          }
+      }
 
     async function updateNews() {
         const currentMode = config.leftModuleMode;
@@ -196,9 +194,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         applyInitialConfig();
         updateClock();
 
-        await fetchAllData();
-        await updateQuote();
-        activeIntervals.push(setInterval(updateQuote, 30 * 60 * 1000));
+          await fetchAllData();
+          await updateQuote();
+          activeIntervals.push(setInterval(updateQuote, 30 * 60 * 1000));
+          await updateStock();
+          activeIntervals.push(setInterval(updateStock, 60 * 1000));
 
         await createSlideshow(elements.personalAlbumContainer, config.personalAlbum, config.personalPhotosUrl, fetchWithMock, activeIntervals);
         await createSlideshow(elements.companyAlbumContainer, config.companyAlbum, config.companyPhotosUrl, fetchWithMock, activeIntervals);
