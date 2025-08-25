@@ -81,10 +81,13 @@ body {
     padding: 0;
 }
 
-/* Centering for interchangeable modules */
+/* Layout for interchangeable modules */
 #quote-module, #stock-module, #news-module {
-    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
+    text-align: center;
 }
 #info-module {
     position: relative;
