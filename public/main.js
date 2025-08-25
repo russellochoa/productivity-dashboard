@@ -265,7 +265,8 @@ document.addEventListener('DOMContentLoaded', async function() {
           activeIntervals.push(setInterval(updateStock, 60 * 1000));
 
         await fetchNews(currentMode);
-        activeIntervals.push(setInterval(rotateNews, 10 * 1000));
+        // Rotate through news headlines every 30 seconds
+        activeIntervals.push(setInterval(rotateNews, 30 * 1000));
         activeIntervals.push(setInterval(() => fetchNews(currentMode), 5 * 60 * 1000));
 
         await createSlideshow(elements.personalAlbumContainer, config.personalAlbum, config.personalPhotosUrl, fetchWithMock, activeIntervals);
