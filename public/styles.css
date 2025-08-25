@@ -96,6 +96,7 @@ body {
 }
 #info-module > div.active {
     display: flex;
+    flex-direction: column;
 }
 #quote-text {
     text-align: center;
