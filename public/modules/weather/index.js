@@ -1,14 +1,22 @@
-export async function updateWeather(config, elements, fetchWithMock) {
-    const data = await fetchWithMock(config.weatherUrl);
-    if (data && data.current && data.location) {
-        const forecastDay = data.forecast?.forecastday?.[0]?.day || {};
-        elements.weatherLocation.textContent = data.location.name || 'Unknown';
-        elements.weatherTemp.textContent = `${Math.round(data.current.temp_f)}°`;
-        elements.weatherHighLow.textContent = `H:${Math.round(forecastDay.maxtemp_f || data.current.temp_f)}° L:${Math.round(forecastDay.mintemp_f || data.current.temp_f)}°`;
-        elements.uvIndex.textContent = data.current.uv ?? '--';
-        elements.aqiValue.textContent = data.current.air_quality?.['us-epa-index'] ?? '--';
-        elements.humidityValue.textContent = `${data.current.humidity}%`;
-        elements.weatherIcon.innerHTML = getWeatherIcon(data.current.condition.text);
+export async function updateWeather(config, elements) {
+    try {
+        const response = await fetch(config.weatherUrl);
+        if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}`);
+        }
+        const data = await response.json();
+        if (data && data.current && data.location) {
+            const forecastDay = data.forecast?.forecastday?.[0]?.day || {};
+            elements.weatherLocation.textContent = data.location.name || 'Unknown';
+            elements.weatherTemp.textContent = `${Math.round(data.current.temp_f)}°`;
+            elements.weatherHighLow.textContent = `H:${Math.round(forecastDay.maxtemp_f || data.current.temp_f)}° L:${Math.round(forecastDay.mintemp_f || data.current.temp_f)}°`;
+            elements.uvIndex.textContent = data.current.uv ?? '--';
+            elements.aqiValue.textContent = data.current.air_quality?.['us-epa-index'] ?? '--';
+            elements.humidityValue.textContent = `${data.current.humidity}%`;
+            elements.weatherIcon.innerHTML = getWeatherIcon(data.current.condition.text);
+        }
+    } catch (error) {
+        console.error('Weather fetch error:', error);
     }
 }
 
