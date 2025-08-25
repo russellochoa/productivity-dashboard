@@ -1,7 +1,7 @@
 {
   "proxyBaseUrl": "https://vercel-proxy-bananadona.vercel.app",
   "quoteUrl": "https://vercel-proxy-bananadona.vercel.app/api/quote",
-  "weatherUrl": "...",
+  "weatherUrl": "https://vercel-proxy-bananadona.vercel.app/api/weather?location=Lehi,UT&days=1&aqi=yes",
   "eventsUrl": "...",
   "personalPhotosUrl": "...",
   "companyPhotosUrl": "...",
