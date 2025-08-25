@@ -73,6 +73,14 @@ body {
     gap: 0.5rem;
 }
 
+#news-mode {
+    background: transparent;
+    border: none;
+    color: white;
+    appearance: none;
+    padding: 0;
+}
+
 /* Centering for interchangeable modules */
 #quote-module, #stock-module, #news-module {
     justify-content: center;
