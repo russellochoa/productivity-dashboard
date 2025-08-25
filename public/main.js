@@ -178,18 +178,18 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     async function updateLeftModule() {
-        elements.quoteModule.style.display = 'none';
-        elements.stockModule.style.display = 'none';
-        elements.newsModule.style.display = 'none';
+        elements.quoteModule.classList.remove('active');
+        elements.stockModule.classList.remove('active');
+        elements.newsModule.classList.remove('active');
 
         if (config.activeLeftModule === 'quote') {
-            elements.quoteModule.style.display = 'flex';
+            elements.quoteModule.classList.add('active');
             await updateQuote();
         } else if (config.activeLeftModule === 'stock') {
-            elements.stockModule.style.display = 'flex';
+            elements.stockModule.classList.add('active');
             await updateStock();
         } else if (config.activeLeftModule === 'news') {
-            elements.newsModule.style.display = 'flex';
+            elements.newsModule.classList.add('active');
             rotateNews();
         }
     }
