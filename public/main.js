@@ -204,6 +204,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         newsIndex = 0;
         fetchNews(currentMode);
     });
+    elements.newsMode.addEventListener('click', e => e.stopPropagation());
+    elements.newsMode.addEventListener('touchstart', e => e.stopPropagation());
 
     function applyInitialConfig() {
         elements.dashboardTitle.textContent = config.dashboardTitle;
