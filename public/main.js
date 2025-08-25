@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     async function fetchAllData() {
         const [calendar] = await Promise.all([
             updateEvents(config, elements, fetchWithMock, activeIntervals),
-            updateWeather(config, elements),
+            updateWeather(config, elements, fetchWithMock),
             updateInfoModule()
         ]);
         currentCalendar = calendar;
