@@ -4,6 +4,9 @@ import { updateWeather } from './modules/weather/index.js';
 import { updateEvents } from './modules/events/index.js';
 import { createSlideshow } from './modules/slideshow/index.js';
 
+let lastQuote = null;
+let lastQuoteTime = 0;
+
 document.addEventListener('DOMContentLoaded', async function() {
     const apiConfig = await loadConfig();
 
@@ -123,17 +126,26 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 
+    function renderQuote() {
+        elements.quoteText.textContent = lastQuote?.text || "--";
+        elements.quoteAuthor.textContent = lastQuote?.author ? `- ${lastQuote.author}` : "";
+        fitText(elements.quoteText, 2.5, 1.2);
+    }
+
     async function updateQuote() {
+        if (Date.now() - lastQuoteTime < 30 * 60 * 1000 && lastQuote) {
+            renderQuote();
+            return;
+        }
         try {
             const { text, author } = await fetch(config.quoteUrl).then(r => r.json());
-            elements.quoteText.textContent = text || "--";
-            elements.quoteAuthor.textContent = author ? `- ${author}` : "";
+            lastQuote = { text, author };
+            lastQuoteTime = Date.now();
         } catch (error) {
             console.error('Fetch error:', error);
-            elements.quoteText.textContent = "--";
-            elements.quoteAuthor.textContent = "";
+            lastQuote = { text: "--", author: "" };
         }
-        fitText(elements.quoteText, 2.5, 1.2);
+        renderQuote();
     }
 
       async function updateStock() {
@@ -205,7 +217,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         if (config.activeLeftModule === 'quote') {
             elements.quoteModule.classList.add('active');
-            await updateQuote();
+            renderQuote();
         } else if (config.activeLeftModule === 'stock') {
             elements.stockModule.classList.add('active');
             await updateStock();
