@@ -103,14 +103,13 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     async function updateQuote() {
         try {
-            const response = await fetch(config.quoteUrl);
-            const data = await response.json();
-            if (data && data[0] && data[0].q) {
-                elements.quoteText.textContent = `"${data[0].q}"`;
-                elements.quoteAuthor.textContent = `- ${data[0].a || 'Unknown'}`;
-            }
+            const { text, author } = await fetch(config.quoteUrl).then(r => r.json());
+            elements.quoteText.textContent = text || "--";
+            elements.quoteAuthor.textContent = author ? `- ${author}` : "";
         } catch (error) {
             console.error('Fetch error:', error);
+            elements.quoteText.textContent = "--";
+            elements.quoteAuthor.textContent = "";
         }
     }
 
@@ -198,6 +197,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         updateClock();
 
         await fetchAllData();
+        await updateQuote();
+        activeIntervals.push(setInterval(updateQuote, 30 * 60 * 1000));
 
         await createSlideshow(elements.personalAlbumContainer, config.personalAlbum, config.personalPhotosUrl, fetchWithMock, activeIntervals);
         await createSlideshow(elements.companyAlbumContainer, config.companyAlbum, config.companyPhotosUrl, fetchWithMock, activeIntervals);
