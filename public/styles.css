@@ -79,6 +79,13 @@ body {
     color: white;
     appearance: none;
     padding: 0;
+    width: 100%;
+    text-align: center;
+    text-align-last: center;
+}
+
+#news-mode option {
+    text-align: center;
 }
 
 /* Layout for interchangeable modules */
