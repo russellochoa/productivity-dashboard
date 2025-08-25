@@ -10,6 +10,7 @@ Provide these values via environment variables or a local `config.json` file.
 Create a `.env` file and define the following values. Ensure your build process exposes them to the browser environment.
 
 ```
+PROXY_BASE_URL=https://vercel-proxy-bananadona.vercel.app
 QUOTE_URL=
 WEATHER_URL=
 EVENTS_URL=
@@ -25,6 +26,7 @@ Alternatively, create a `config.json` file at the project root:
 
 ```
 {
+  "proxyBaseUrl": "https://vercel-proxy-bananadona.vercel.app",
   "quoteUrl": "...",
   "weatherUrl": "...",
   "eventsUrl": "...",

@@ -1,6 +1,7 @@
 export async function loadConfig() {
   const env = (typeof process !== 'undefined' && process.env) ? process.env : {};
   if (
+    env.PROXY_BASE_URL ||
     env.QUOTE_URL ||
     env.WEATHER_URL ||
     env.EVENTS_URL ||
@@ -10,6 +11,7 @@ export async function loadConfig() {
     env.NEWS_URL
   ) {
     return {
+      proxyBaseUrl: env.PROXY_BASE_URL,
       quoteUrl: env.QUOTE_URL,
       weatherUrl: env.WEATHER_URL,
       eventsUrl: env.EVENTS_URL,
