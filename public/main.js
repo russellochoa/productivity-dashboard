@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         stockChange: document.getElementById('stock-change'),
         newsModule: document.getElementById('news-module'),
         newsHeadline: document.getElementById('news-headline'),
+        newsMode: document.getElementById('news-mode'),
         weatherLocation: document.getElementById('weather-location'),
         weatherTemp: document.getElementById('weather-temp'),
         weatherHighLow: document.getElementById('weather-high-low'),
@@ -75,6 +76,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     let activeIntervals = [];
     let currentCalendar = [];
     let statusManager;
+    let newsArticles = [];
+    let newsIndex = 0;
+    let currentMode = elements.newsMode ? elements.newsMode.value : 'headlines';
     function stopAllIntervals() {
         activeIntervals.forEach(clearInterval);
         activeIntervals = [];
@@ -137,23 +141,36 @@ document.addEventListener('DOMContentLoaded', async function() {
           }
       }
 
-    async function updateNews() {
-        const currentMode = config.leftModuleMode;
+    async function fetchNews(mode) {
         try {
-            const response = await fetch(`${config.newsUrl}?mode=${currentMode}`);
+            const response = await fetch(`${config.newsUrl}?mode=${mode}`);
             const data = await response.json();
-            const headlines = data?.articles || [];
-            if (headlines.length > 0) {
-                const index = Math.floor((Date.now() / (30 * 60 * 1000)) % headlines.length);
-                elements.newsHeadline.textContent = headlines[index].title || 'News unavailable';
-            } else {
-                elements.newsHeadline.textContent = 'News unavailable';
+            newsArticles = data?.articles || [];
+            if (newsIndex >= newsArticles.length) {
+                newsIndex = 0;
             }
+            rotateNews();
         } catch (error) {
             console.error('Fetch error:', error);
+            newsArticles = [];
             elements.newsHeadline.textContent = 'News unavailable';
         }
     }
+
+    function rotateNews() {
+        if (newsArticles.length === 0) {
+            elements.newsHeadline.textContent = 'News unavailable';
+            return;
+        }
+        elements.newsHeadline.textContent = newsArticles[newsIndex]?.title || 'News unavailable';
+        newsIndex = (newsIndex + 1) % newsArticles.length;
+    }
+
+    elements.newsMode.addEventListener('change', (e) => {
+        currentMode = e.target.value;
+        newsIndex = 0;
+        fetchNews(currentMode);
+    });
 
     function applyInitialConfig() {
         elements.dashboardTitle.textContent = config.dashboardTitle;
@@ -173,7 +190,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             await updateStock();
         } else if (config.activeLeftModule === 'news') {
             elements.newsModule.style.display = 'flex';
-            await updateNews();
+            rotateNews();
         }
     }
 
@@ -199,6 +216,10 @@ document.addEventListener('DOMContentLoaded', async function() {
           activeIntervals.push(setInterval(updateQuote, 30 * 60 * 1000));
           await updateStock();
           activeIntervals.push(setInterval(updateStock, 60 * 1000));
+
+        await fetchNews(currentMode);
+        activeIntervals.push(setInterval(rotateNews, 10 * 1000));
+        activeIntervals.push(setInterval(() => fetchNews(currentMode), 5 * 60 * 1000));
 
         await createSlideshow(elements.personalAlbumContainer, config.personalAlbum, config.personalPhotosUrl, fetchWithMock, activeIntervals);
         await createSlideshow(elements.companyAlbumContainer, config.companyAlbum, config.companyPhotosUrl, fetchWithMock, activeIntervals);
