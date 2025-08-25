@@ -60,4 +60,4 @@ Run the built-in Node server to serve the dashboard and forward API requests wit
 2. Start the server: `npm start`
 3. Access the app at `http://localhost:3000`
 
-The client can forward requests through `/api/proxy?url=...` for generic third-party APIs. `/api/news` is available for NewsAPI calls. Weather requests bypass the proxy and use `WEATHER_URL` directly.
+The client can forward requests through `/api/proxy?url=...` for generic third-party APIs. `/api/news` is available for NewsAPI calls. Weather requests now fetch directly from `WEATHER_URL` without using the proxy.

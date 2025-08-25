@@ -1,20 +1,15 @@
-export async function updateWeather(config, elements, fetchWithMock) {
+export async function updateWeather(config, elements) {
     if (!config?.weatherUrl) {
         resetFields();
         return;
     }
 
     try {
-        let data;
-        if (typeof fetchWithMock === 'function') {
-            data = await fetchWithMock(config.weatherUrl);
-        } else {
-            const response = await fetch(config.weatherUrl);
-            if (!response.ok) {
-                throw new Error(`Request failed with status ${response.status}`);
-            }
-            data = await response.json();
+        const response = await fetch(config.weatherUrl);
+        if (!response.ok) {
+            throw new Error(`Request failed with status ${response.status}`);
         }
+        const data = await response.json();
 
         if (data && data.current && data.location) {
             const forecastDay = data.forecast?.forecastday?.[0]?.day || {};
