@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         dashboardTitle: "Russell's Desk",
         profileImageUrl: "https://www.dropbox.com/scl/fi/7fsfrr4yixqmmh0i0p67p/C2E599B7-FF0F-4740-8EB0-BD57C60723AB.jpg?rlkey=pawp5kwzu81n1hrqzxxric8lm&st=b2yrbs29&raw=1",
         dataRefreshInterval: 15 * 60 * 1000,
-        leftModuleMode: 'rotate',
-        activeLeftModule: 'quote',
+        infoModuleMode: 'rotate',
+        activeInfoModule: 'quote',
         quoteUrl: apiConfig.quoteUrl,
         weatherUrl: apiConfig.weatherUrl,
         eventsUrl: apiConfig.eventsUrl,
@@ -210,34 +210,34 @@ document.addEventListener('DOMContentLoaded', async function() {
         elements.profileImage.src = config.profileImageUrl;
     }
 
-    async function updateLeftModule() {
+    async function updateInfoModule() {
         elements.quoteModule.classList.remove('active');
         elements.stockModule.classList.remove('active');
         elements.newsModule.classList.remove('active');
 
-        if (config.activeLeftModule === 'quote') {
+        if (config.activeInfoModule === 'quote') {
             elements.quoteModule.classList.add('active');
             renderQuote();
-        } else if (config.activeLeftModule === 'stock') {
+        } else if (config.activeInfoModule === 'stock') {
             elements.stockModule.classList.add('active');
             await updateStock();
-        } else if (config.activeLeftModule === 'news') {
+        } else if (config.activeInfoModule === 'news') {
             elements.newsModule.classList.add('active');
             rotateNews();
         }
     }
 
-    function cycleLeftModule() {
+    function cycleInfoModule() {
         const modules = ['quote', 'stock', 'news'];
-        const currentIndex = modules.indexOf(config.activeLeftModule);
-        config.activeLeftModule = modules[(currentIndex + 1) % modules.length];
-        updateLeftModule();
+        const currentIndex = modules.indexOf(config.activeInfoModule);
+        config.activeInfoModule = modules[(currentIndex + 1) % modules.length];
+        updateInfoModule();
     }
 
     [elements.quoteModule, elements.stockModule, elements.newsModule].forEach(module => {
         if (module) {
-            module.addEventListener('click', cycleLeftModule);
-            module.addEventListener('touchstart', cycleLeftModule);
+            module.addEventListener('click', cycleInfoModule);
+            module.addEventListener('touchstart', cycleInfoModule);
         }
     });
 
@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const [calendar] = await Promise.all([
             updateEvents(config, elements, fetchWithMock, activeIntervals),
             updateWeather(config, elements, fetchWithMock),
-            updateLeftModule()
+            updateInfoModule()
         ]);
         currentCalendar = calendar;
         statusManager.evaluate(currentCalendar);
@@ -275,8 +275,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         activeIntervals.push(setInterval(fetchAllData, config.dataRefreshInterval));
         activeIntervals.push(setInterval(() => updateMasterStatus(statusManager, currentCalendar), 5000));
 
-        if (config.leftModuleMode === 'rotate') {
-            activeIntervals.push(setInterval(cycleLeftModule, 60000));
+        if (config.infoModuleMode === 'rotate') {
+            activeIntervals.push(setInterval(cycleInfoModule, 60000));
         }
     }
 

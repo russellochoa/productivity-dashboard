@@ -78,15 +78,15 @@ body {
     justify-content: center;
     align-items: center;
 }
-#left-module {
+#info-module {
     position: relative;
 }
-#left-module > div {
+#info-module > div {
     position: absolute;
     inset: 0;
     display: none;
 }
-#left-module > div.active {
+#info-module > div.active {
     display: flex;
 }
 #quote-text {
