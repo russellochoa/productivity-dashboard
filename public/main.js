@@ -110,6 +110,9 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     function fitText(el, maxVH, minVH, container = el.parentElement) {
         if (!el) return;
+        const maxVHCap = (20 / window.innerHeight) * 100;
+        maxVH = Math.min(maxVH, maxVHCap);
+        minVH = Math.min(minVH, maxVH);
         let size = maxVH;
         el.style.fontSize = `${size}vh`;
         el.style.wordBreak = 'break-word';
@@ -129,7 +132,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     function renderQuote() {
         elements.quoteText.textContent = lastQuote?.text || "--";
         elements.quoteAuthor.textContent = lastQuote?.author ? `- ${lastQuote.author}` : "";
-        fitText(elements.quoteText, 2.5, 1.2, elements.quoteModule);
+        fitText(elements.quoteText, Math.min(2.5, (20 / window.innerHeight) * 100), 1.2, elements.quoteModule);
     }
 
     async function updateQuote() {
@@ -187,7 +190,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             console.error('Fetch error:', error);
             newsArticles = [];
             elements.newsHeadline.textContent = 'News unavailable';
-            fitText(elements.newsHeadline, 2.5, 1.2, elements.newsModule);
+            fitText(elements.newsHeadline, Math.min(2.5, (20 / window.innerHeight) * 100), 1.2, elements.newsModule);
             fitText(elements.newsMode, 2, 1.2, elements.newsModule);
         }
     }
@@ -196,17 +199,17 @@ document.addEventListener('DOMContentLoaded', async function() {
         try {
             if (newsArticles.length === 0) {
                 elements.newsHeadline.textContent = 'News unavailable';
-                fitText(elements.newsHeadline, 2.5, 1.2, elements.newsModule);
+                fitText(elements.newsHeadline, Math.min(2.5, (20 / window.innerHeight) * 100), 1.2, elements.newsModule);
                 fitText(elements.newsMode, 2, 1.2, elements.newsModule);
                 return;
             }
             elements.newsHeadline.textContent = newsArticles[newsIndex]?.title || 'News unavailable';
-            fitText(elements.newsHeadline, 2.5, 1.2, elements.newsModule);
+            fitText(elements.newsHeadline, Math.min(2.5, (20 / window.innerHeight) * 100), 1.2, elements.newsModule);
             fitText(elements.newsMode, 2, 1.2, elements.newsModule);
             newsIndex = (newsIndex + 1) % newsArticles.length;
         } catch (error) {
             elements.newsHeadline.textContent = 'News unavailable';
-            fitText(elements.newsHeadline, 2.5, 1.2, elements.newsModule);
+            fitText(elements.newsHeadline, Math.min(2.5, (20 / window.innerHeight) * 100), 1.2, elements.newsModule);
             fitText(elements.newsMode, 2, 1.2, elements.newsModule);
             console.error(error);
             return;
