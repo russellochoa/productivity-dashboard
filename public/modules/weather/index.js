@@ -15,7 +15,7 @@ export async function updateWeather(config, elements) {
             const forecastDay = data.forecast?.forecastday?.[0]?.day || {};
             elements.weatherLocation.textContent = data.location.name || 'Unknown';
             elements.weatherTemp.textContent = `${Math.round(data.current.temp_f)}°`;
-            elements.weatherHighLow.textContent = `H:${Math.round(forecastDay.maxtemp_f || data.current.temp_f)}° L:${Math.round(forecastDay.mintemp_f || data.current.temp_f)}°`;
+            elements.weatherHighLow.textContent = `H:${Math.round(forecastDay.maxtemp_f ?? data.current.temp_f)}° L:${Math.round(forecastDay.mintemp_f ?? data.current.temp_f)}°`;
             elements.uvIndex.textContent = data.current.uv ?? '--';
             elements.aqiValue.textContent = data.current.air_quality?.['us-epa-index'] ?? '--';
             elements.humidityValue.textContent = `${data.current.humidity}%`;
