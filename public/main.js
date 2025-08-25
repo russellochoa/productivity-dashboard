@@ -194,6 +194,20 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 
+    function cycleLeftModule() {
+        const modules = ['quote', 'stock', 'news'];
+        const currentIndex = modules.indexOf(config.activeLeftModule);
+        config.activeLeftModule = modules[(currentIndex + 1) % modules.length];
+        updateLeftModule();
+    }
+
+    [elements.quoteModule, elements.stockModule, elements.newsModule].forEach(module => {
+        if (module) {
+            module.addEventListener('click', cycleLeftModule);
+            module.addEventListener('touchstart', cycleLeftModule);
+        }
+    });
+
     async function fetchAllData() {
         const [calendar] = await Promise.all([
             updateEvents(config, elements, fetchWithMock, activeIntervals),
@@ -229,13 +243,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         activeIntervals.push(setInterval(() => updateMasterStatus(statusManager, currentCalendar), 5000));
 
         if (config.leftModuleMode === 'rotate') {
-            let moduleIndex = 0;
-            const modules = ['quote', 'stock', 'news'];
-            activeIntervals.push(setInterval(() => {
-                moduleIndex = (moduleIndex + 1) % modules.length;
-                config.activeLeftModule = modules[moduleIndex];
-                updateLeftModule();
-            }, 60000));
+            activeIntervals.push(setInterval(cycleLeftModule, 60000));
         }
     }
 
