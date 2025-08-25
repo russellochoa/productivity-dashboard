@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', async function() {
               const parsedChangePct = parseFloat(changePct);
               if (isNaN(parsedPrice) || isNaN(parsedChange) || isNaN(parsedChangePct)) {
                   elements.stockPrice.textContent = '--';
-                  elements.stockChange.textContent = '--';
+                  elements.stockChange.textContent = '';
                   elements.stockChange.className = 'text-[1.8vh] stock-change';
                   return;
               }
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           } catch (error) {
               console.error('Fetch error:', error);
               elements.stockPrice.textContent = '--';
-              elements.stockChange.textContent = '--';
+              elements.stockChange.textContent = '';
               elements.stockChange.className = 'text-[1.8vh] stock-change';
           }
       }
