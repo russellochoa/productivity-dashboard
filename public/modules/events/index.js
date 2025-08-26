@@ -97,7 +97,7 @@ function updateWorkingLocationIcon(workingLocationEvents) {
         // Update the title to include the icon on the right
         const titleSpan = titleElement.querySelector('span');
         if (titleSpan) {
-            titleSpan.innerHTML = `Upcoming Events <span class="ml-auto">${icon}</span>`;
+            titleSpan.innerHTML = `Upcoming Events <span class="working-location-icon">${icon}</span>`;
         }
     } else {
         // Reset to original title if no working location
