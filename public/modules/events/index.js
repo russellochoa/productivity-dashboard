@@ -29,11 +29,20 @@ export async function updateEvents(config, elements, fetchWithMock, activeInterv
             };
         });
         
-        // Update the title with working location icon
-        updateWorkingLocationIcon(currentCalendar);
-        
         // Filter out working location events and separate all-day events
-        const { timedEvents, allDayEvents } = separateEventTypes(currentCalendar);
+        const { timedEvents, allDayEvents, workingLocationEvents } = separateEventTypes(currentCalendar);
+        
+        // Debug logging
+        console.log('Events processing:', {
+            total: currentCalendar.length,
+            timed: timedEvents.length,
+            allDay: allDayEvents.length,
+            workingLocation: workingLocationEvents.length,
+            workingLocationEvents: workingLocationEvents.map(e => e.summary)
+        });
+        
+        // Update the title with working location icon
+        updateWorkingLocationIcon(workingLocationEvents);
         
         elements.eventsList.innerHTML = '';
 
@@ -73,21 +82,12 @@ export async function updateEvents(config, elements, fetchWithMock, activeInterv
     }
 }
 
-function updateWorkingLocationIcon(events) {
+function updateWorkingLocationIcon(workingLocationEvents) {
     const titleElement = document.querySelector('#events-module .module-title');
     if (!titleElement) return;
     
-    // Find working location events
-    const workingLocationEvent = events.find(event => {
-        const summary = event.summary.toLowerCase();
-        return summary.includes('working location') ||
-               summary.includes('office') ||
-               summary.includes('work from') ||
-               summary.includes('wfh') ||
-               summary.includes('remote');
-    });
-    
-    if (workingLocationEvent) {
+    if (workingLocationEvents && workingLocationEvents.length > 0) {
+        const workingLocationEvent = workingLocationEvents[0]; // Use the first one
         const summary = workingLocationEvent.summary.toLowerCase();
         const isOffice = summary.includes('office') && !summary.includes('work from home') && !summary.includes('wfh');
         const icon = isOffice ? 
@@ -111,11 +111,18 @@ function updateWorkingLocationIcon(events) {
 function separateEventTypes(events) {
     const timedEvents = [];
     const allDayEvents = [];
+    const workingLocationEvents = [];
     
     events.forEach(event => {
+        const summary = event.summary.toLowerCase();
+        const isWorkingLocation = summary.includes('working location') ||
+                                 summary.includes('office') ||
+                                 summary.includes('work from') ||
+                                 summary.includes('wfh') ||
+                                 summary.includes('remote');
+        
         if (event.isAllDay) {
             // Include OOO and important all-day events
-            const summary = event.summary.toLowerCase();
             if (summary.includes('ooo') || 
                 summary.includes('out of office') ||
                 summary.includes('vacation') ||
@@ -125,18 +132,16 @@ function separateEventTypes(events) {
                 allDayEvents.push(event);
             }
             // Don't include working location events in all-day display
+        } else if (isWorkingLocation) {
+            // Collect working location events for the icon
+            workingLocationEvents.push(event);
         } else {
-            // Only include timed events that aren't working location
-            const summary = event.summary.toLowerCase();
-            if (!summary.includes('working location') && 
-                !summary.includes('office') && 
-                !summary.includes('work from')) {
-                timedEvents.push(event);
-            }
+            // Include regular timed events
+            timedEvents.push(event);
         }
     });
     
-    return { timedEvents, allDayEvents };
+    return { timedEvents, allDayEvents, workingLocationEvents };
 }
 
 function formatToTime(dateStr) {
