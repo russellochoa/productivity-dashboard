@@ -73,6 +73,11 @@ body {
     gap: 0.5rem;
 }
 
+/* Events module title with working location icon */
+#events-module .module-title {
+    justify-content: space-between;
+}
+
 #news-mode {
     background: transparent;
     border: none;
@@ -86,6 +91,21 @@ body {
 
 #news-mode option {
     text-align: center;
+}
+
+/* All-day events styling */
+.all-day-events {
+    padding: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 0.5rem;
+}
+
+.all-day-events div {
+    margin-bottom: 0.25rem;
+}
+
+.all-day-events div:last-child {
+    margin-bottom: 0;
 }
 
 /* Layout for interchangeable modules */
