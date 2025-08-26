@@ -267,13 +267,14 @@ document.addEventListener('DOMContentLoaded', async function() {
             updateInfoModule()
         ]);
         currentCalendar = calendar;
-        statusManager.evaluate(currentCalendar);
+        // Status manager now handles its own logic - no need to call evaluate
     }
 
     async function initializeApp() {
         stopAllIntervals();
 
         statusManager = createStatusManager(config, elements);
+        statusManager.init(); // Initialize the status manager
         applyInitialConfig();
         updateClock();
 
