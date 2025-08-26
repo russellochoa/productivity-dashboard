@@ -275,9 +275,18 @@ function getStatusFromEvent(event, calendar) {
         return 'Focus Time';
     }
 
-    // Check for video meetings
+    // Check for video meetings and location logic
     if (hasVideoLink) {
-        return 'In a Zoom Meeting';
+        // Check if event has a physical location
+        const hasLocation = event.location && event.location.trim() !== '';
+        
+        if (hasLocation) {
+            // Has both zoom link AND location
+            return 'In a Meeting';
+        } else {
+            // Has zoom link but NO location
+            return 'In a Zoom Meeting';
+        }
     }
 
     // Check for triple-booking (overloaded)
@@ -294,6 +303,6 @@ function getStatusFromEvent(event, calendar) {
         return 'Overloaded Human';
     }
 
-    // Default meeting status
+    // Default meeting status (no zoom link)
     return 'In a Meeting';
 }
