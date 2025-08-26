@@ -111,8 +111,8 @@ export function createStatusManager(config, elements) {
                 return 'Available';
             }
 
-            // Rotate through the status list every 5 seconds
-            const index = Math.floor((Date.now() / 5000) % statusList.length);
+            // Rotate through the status list every 10 seconds
+            const index = Math.floor((Date.now() / 10000) % statusList.length);
             return statusList[index];
         },
 
@@ -122,13 +122,13 @@ export function createStatusManager(config, elements) {
                 clearInterval(this.fallbackRotationInterval);
             }
 
-            // Start rotating fallback statuses every 5 seconds
+            // Start rotating fallback statuses every 10 seconds
             this.fallbackRotationInterval = setInterval(() => {
                 if (!this.easterEggActive) {
                     const fallbackStatus = this.getCurrentFallbackStatus();
                     this.setStatus(fallbackStatus);
                 }
-            }, 5000);
+            }, 10000);
 
             // Show initial fallback status immediately
             if (!this.easterEggActive) {

@@ -25,26 +25,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         newsUrl: apiConfig.newsUrl,
         personalAlbum: { rotateSpeed: 5000, order: 'random', transition: 'fade', transitionSpeed: 1.5 },
         companyAlbum: { rotateSpeed: 10000, order: 'sequential', transition: 'fade', transitionSpeed: 1.5 },
-        statusConfig: {
-            images: {
-                'In a Meeting': 'https://images.unsplash.com/photo-1554224312-3b5013403484?q=80&w=2070&auto=format=fit',
-                'In a Zoom Meeting': 'https://images.unsplash.com/photo-1554224312-3b5013403484?q=80&w=2070&auto=format=fit',
-                'Focus Time': 'https://cdn.pixabay.com/animation/2024/05/16/21/45/21-45-34-3_512.gif',
-                'Out at Lunch': 'https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1887&auto=format=fit',
-                'Out of Office': 'https://images.unsplash.com/photo-1508985249468-5352e5ebd89a?q=80&w=2070&auto=format=fit',
-                'Out Sick': 'https://images.unsplash.com/photo-1555883523-c3942355656c?q=80&w=1887&auto=format=fit',
-                'Overloaded Human': 'https://images.unsplash.com/photo-1531393326464-18593243a069?q=80&w=1887&auto=format=fit',
-                'Available': 'https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?q=80&w=2070&auto=format=fit=crop',
-                'default': 'https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?q=80&w=2070&auto=format=fit=crop'
-            },
-            fallback_statuses: {
-                early_morning: ["Booting Up… Breakfast First", "Working Out (Mentally and Physically)", "System Not Ready"],
-                start_of_day: ["Starting the Day Strong", "Thoughts Loading… Please Wait", "Warming Up Slack Fingers"],
-                end_of_day: ["Workday Shutdown in Progress", "Office Evacuation in Progress"],
-                after_work: ["Logging Out IRL", "Goodbye Desk, Hello Couch", "Out for the Day - Try Again Tomorrow"],
-                evening: ["Do Not Disturb - Life in Progress", "Battery Depleted - Recharging"]
-            }
-        }
+        // Status configuration removed - now handled by the status module itself
     };
 
     const elements = {
