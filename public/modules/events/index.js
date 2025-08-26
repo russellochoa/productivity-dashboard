@@ -97,14 +97,12 @@ function updateWorkingLocationIcon(workingLocationEvents) {
         // Update the title to include the icon on the right
         const titleSpan = titleElement.querySelector('span');
         if (titleSpan) {
-            titleSpan.innerHTML = `<span class="title-text">Upcoming Events</span><span class="working-location-icon">${icon}</span>`;
+            titleSpan.innerHTML = `Upcoming Events <span class="working-location-icon">${icon}</span>`;
         }
     } else {
         // Reset to original title if no working location
         const titleSpan = titleElement.querySelector('span');
-        if (titleSpan) {
-            titleSpan.innerHTML = '<span class="title-text">Upcoming Events</span>';
-        }
+        titleSpan.innerHTML = 'Upcoming Events';
     }
 }
 
