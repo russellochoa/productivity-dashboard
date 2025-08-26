@@ -66,8 +66,20 @@ export function createStatusManager(config, elements) {
         getPlaceholderImage(statusText) {
             // Placeholder images - will be replaced with config system later
             const placeholderImages = {
+                // Easter Egg Statuses
                 'Too Many Meetings (warning)': 'https://via.placeholder.com/400x300/ff6b6b/ffffff?text=Too+Many+Meetings',
                 'What a chill day today': 'https://via.placeholder.com/400x300/51cf66/ffffff?text=Chill+Day',
+                
+                // Primary Calendar Event Statuses
+                'In a Meeting': 'https://via.placeholder.com/400x300/4dabf7/ffffff?text=In+a+Meeting',
+                'In a Zoom Meeting': 'https://via.placeholder.com/400x300/339af0/ffffff?text=In+a+Zoom+Meeting',
+                'Focus Time': 'https://via.placeholder.com/400x300/51cf66/ffffff?text=Focus+Time',
+                'Out at Lunch': 'https://via.placeholder.com/400x300/ffd43b/ffffff?text=Out+at+Lunch',
+                'Out of Office': 'https://via.placeholder.com/400x300/ffa8a8/ffffff?text=Out+of+Office',
+                'Out Sick': 'https://via.placeholder.com/400x300/ff6b6b/ffffff?text=Out+Sick',
+                'Overloaded Human': 'https://via.placeholder.com/400x300/be4bdb/ffffff?text=Overloaded+Human',
+                
+                // Time-Based Fallback Statuses
                 'Booting Up… Breakfast First': 'https://via.placeholder.com/400x300/ffd43b/ffffff?text=Early+Morning',
                 'Working Out (Mentally and Physically)': 'https://via.placeholder.com/400x300/ffd43b/ffffff?text=Early+Morning',
                 'System Not Ready': 'https://via.placeholder.com/400x300/ffd43b/ffffff?text=Early+Morning',
@@ -203,16 +215,85 @@ export function updateMasterStatus(statusManager, currentCalendar) {
             statusManager.stopFallbackRotation();
             statusManager.setStatus(statusManager.easterEggStatuses.tooManyMeetings, true);
             statusManager.lastEasterEggTime = now.getTime();
+            return; // Exit early, easter egg is active
         } else if (meetingCount <= 3) {
             // Chill day easter egg
             statusManager.stopFallbackRotation();
             statusManager.setStatus(statusManager.easterEggStatuses.chillDay, true);
             statusManager.lastEasterEggTime = now.getTime();
+            return; // Exit early, easter egg is active
         }
     }
 
-    // If no easter egg is active, ensure fallback rotation is running
+    // Check for current calendar events (Primary Status Logic)
+    const currentEvent = getCurrentEvent(currentCalendar, now);
+    if (currentEvent) {
+        const primaryStatus = getStatusFromEvent(currentEvent, currentCalendar);
+        if (primaryStatus) {
+            statusManager.stopFallbackRotation();
+            statusManager.setStatus(primaryStatus);
+            return; // Exit early, primary status is active
+        }
+    }
+
+    // If no easter egg or primary status is active, ensure fallback rotation is running
     if (!statusManager.easterEggActive && !statusManager.fallbackRotationInterval) {
         statusManager.startFallbackRotation();
     }
+}
+
+// Helper function to get current event
+function getCurrentEvent(calendar, now) {
+    return calendar.find(event => {
+        const eventStart = new Date(event.start.dateTime || event.start.date);
+        const eventEnd = new Date(event.end.dateTime || event.start.date);
+        return now >= eventStart && now < eventEnd;
+    });
+}
+
+// Helper function to determine status from event
+function getStatusFromEvent(event, calendar) {
+    const title = event.summary?.toLowerCase() || '';
+    const eventType = event.eventType;
+    const hasVideoLink = event.conferenceData?.conferenceId || 
+                        event.hangoutLink || 
+                        event.conferenceData?.entryPoints?.some(ep => ep.entryPointType === 'video');
+
+    // Check for special event types first
+    if (eventType === 'outOfOffice' || title.includes('ooo')) {
+        return 'Out of Office';
+    }
+
+    // Check for specific title patterns
+    if (title.includes('sick')) {
+        return 'Out Sick';
+    }
+    if (title.includes('lunch')) {
+        return 'Out at Lunch';
+    }
+    if (title.includes('focus time')) {
+        return 'Focus Time';
+    }
+
+    // Check for video meetings
+    if (hasVideoLink) {
+        return 'In a Zoom Meeting';
+    }
+
+    // Check for triple-booking (overloaded)
+    const eventStart = new Date(event.start.dateTime || event.start.date);
+    const eventEnd = new Date(event.end.dateTime || event.start.date);
+    const overlappingEvents = calendar.filter(otherEvent => {
+        if (otherEvent === event) return false;
+        const otherStart = new Date(otherEvent.start.dateTime || otherEvent.start.date);
+        const otherEnd = new Date(otherEvent.end.dateTime || otherEvent.start.date);
+        return eventStart < otherEnd && eventEnd > otherStart;
+    });
+
+    if (overlappingEvents.length >= 2) { // Triple-booked or more
+        return 'Overloaded Human';
+    }
+
+    // Default meeting status
+    return 'In a Meeting';
 }
