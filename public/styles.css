@@ -76,6 +76,16 @@ body {
 /* Events module title with working location icon */
 #events-module .module-title {
     justify-content: space-between;
+    align-items: center;
+}
+
+#events-module .module-title .title-text {
+    flex: 1;
+}
+
+#events-module .module-title .working-location-icon {
+    margin-left: auto;
+    flex-shrink: 0;
 }
 
 #news-mode {
