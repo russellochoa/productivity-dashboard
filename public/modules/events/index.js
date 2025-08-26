@@ -1,38 +1,56 @@
 export async function updateEvents(config, elements, fetchWithMock, activeIntervals) {
-    const data = await fetchWithMock(config.eventsUrl);
-    const currentCalendar = (data?.items || []).map(event => {
-        const start = new Date(event.start.dateTime || event.start.date);
-        const end = new Date(event.end.dateTime || event.end.date);
-        return {
-            start,
-            end,
-            startTime: formatToTime(start),
-            endTime: formatToTime(end),
-            summary: event.summary || '',
-            location: event.location || ''
-        };
-    });
-    elements.eventsList.innerHTML = '';
-
-    if (currentCalendar && currentCalendar.length > 0) {
-        const eventGroups = groupEventsByTime(currentCalendar);
-        eventGroups.slice(0, 3).forEach(group => {
-            const li = document.createElement('li');
-            if (group.length > 1) {
-                li.className = 'event-group';
-                group.forEach(event => li.innerHTML += createEventBubbleHTML(event));
-            } else {
-                li.className = 'event-item';
-                li.innerHTML = createEventBubbleHTML(group[0]);
-            }
-            elements.eventsList.appendChild(li);
-        });
-
-        document.querySelectorAll('.event-group').forEach(group => animateEventGroup(group, activeIntervals));
-    } else {
-        elements.eventsList.innerHTML = '<li class="text-slate-300 text-center p-4">No upcoming events.</li>';
+    if (!config?.eventsUrl) {
+        elements.eventsList.innerHTML = '<li class="text-slate-300 text-center p-4">No events URL configured.</li>';
+        return [];
     }
-    return currentCalendar;
+
+    try {
+        // Call the events API directly instead of using the proxy
+        const response = await fetch(config.eventsUrl);
+        if (!response.ok) {
+            throw new Error(`Events API request failed with status ${response.status}`);
+        }
+        const data = await response.json();
+        
+        const currentCalendar = (data?.items || []).map(event => {
+            const start = new Date(event.start.dateTime || event.start.date);
+            const end = new Date(event.end.dateTime || event.end.date);
+            return {
+                start,
+                end,
+                startTime: formatToTime(start),
+                endTime: formatToTime(end),
+                summary: event.summary || '',
+                location: event.location || ''
+            };
+        });
+        
+        elements.eventsList.innerHTML = '';
+
+        if (currentCalendar && currentCalendar.length > 0) {
+            const eventGroups = groupEventsByTime(currentCalendar);
+            eventGroups.slice(0, 3).forEach(group => {
+                const li = document.createElement('li');
+                if (group.length > 1) {
+                    li.className = 'event-group';
+                    group.forEach(event => li.innerHTML += createEventBubbleHTML(event));
+                } else {
+                    li.className = 'event-item';
+                    li.innerHTML = createEventBubbleHTML(group[0]);
+                }
+                elements.eventsList.appendChild(li);
+            });
+
+            document.querySelectorAll('.event-group').forEach(group => animateEventGroup(group, activeIntervals));
+        } else {
+            elements.eventsList.innerHTML = '<li class="text-slate-300 text-center p-4">No upcoming events.</li>';
+        }
+        return currentCalendar;
+    } catch (error) {
+        console.error('Events fetch error:', error);
+        elements.eventsList.innerHTML = '<li class="text-slate-300 text-center p-4">Error loading events.</li>';
+        return [];
+    }
 }
 
 function formatToTime(dateStr) {
