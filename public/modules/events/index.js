@@ -74,7 +74,8 @@ export async function updateEvents(config, elements, fetchWithMock, activeInterv
         } else if (allDayEvents.length === 0) {
             elements.eventsList.innerHTML = '<li class="text-slate-300 text-center p-4">No upcoming events.</li>';
         }
-        return currentCalendar;
+        // Return the full calendar for status module, but display only filtered events
+        return data?.items || [];
     } catch (error) {
         console.error('Events fetch error:', error);
         elements.eventsList.innerHTML = '<li class="text-slate-300 text-center p-4">Error loading events.</li>';
