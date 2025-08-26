@@ -15,20 +15,40 @@ export async function updateEvents(config, elements, fetchWithMock, activeInterv
         const currentCalendar = (data?.items || []).map(event => {
             const start = new Date(event.start.dateTime || event.start.date);
             const end = new Date(event.end.dateTime || event.end.date);
+            const isAllDay = !event.start.dateTime && event.start.date;
+            
             return {
                 start,
                 end,
                 startTime: formatToTime(start),
                 endTime: formatToTime(end),
                 summary: event.summary || '',
-                location: event.location || ''
+                location: event.location || '',
+                isAllDay,
+                originalEvent: event
             };
         });
         
+        // Update the title with working location icon
+        updateWorkingLocationIcon(currentCalendar);
+        
+        // Filter out working location events and separate all-day events
+        const { timedEvents, allDayEvents } = separateEventTypes(currentCalendar);
+        
         elements.eventsList.innerHTML = '';
 
-        if (currentCalendar && currentCalendar.length > 0) {
-            const eventGroups = groupEventsByTime(currentCalendar);
+        // Show all-day events below the title
+        if (allDayEvents.length > 0) {
+            const allDayContainer = document.createElement('div');
+            allDayContainer.className = 'all-day-events mb-2';
+            allDayContainer.innerHTML = allDayEvents.map(event => 
+                `<div class="text-slate-400 text-[1.2vh] font-light">All day: ${event.summary}</div>`
+            ).join('');
+            elements.eventsList.appendChild(allDayContainer);
+        }
+
+        if (timedEvents && timedEvents.length > 0) {
+            const eventGroups = groupEventsByTime(timedEvents);
             eventGroups.slice(0, 3).forEach(group => {
                 const li = document.createElement('li');
                 if (group.length > 1) {
@@ -42,7 +62,7 @@ export async function updateEvents(config, elements, fetchWithMock, activeInterv
             });
 
             document.querySelectorAll('.event-group').forEach(group => animateEventGroup(group, activeIntervals));
-        } else {
+        } else if (allDayEvents.length === 0) {
             elements.eventsList.innerHTML = '<li class="text-slate-300 text-center p-4">No upcoming events.</li>';
         }
         return currentCalendar;
@@ -53,6 +73,72 @@ export async function updateEvents(config, elements, fetchWithMock, activeInterv
     }
 }
 
+function updateWorkingLocationIcon(events) {
+    const titleElement = document.querySelector('#events-module .module-title');
+    if (!titleElement) return;
+    
+    // Find working location events
+    const workingLocationEvent = events.find(event => {
+        const summary = event.summary.toLowerCase();
+        return summary.includes('working location') ||
+               summary.includes('office') ||
+               summary.includes('work from') ||
+               summary.includes('wfh') ||
+               summary.includes('remote');
+    });
+    
+    if (workingLocationEvent) {
+        const summary = workingLocationEvent.summary.toLowerCase();
+        const isOffice = summary.includes('office') && !summary.includes('work from home') && !summary.includes('wfh');
+        const icon = isOffice ? 
+            '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9,22 9,12 15,12 15,22"></polyline></svg>' :
+            '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><path d="M9 22v-6h6v6"></path><path d="M9 12h6"></path><path d="M9 16h6"></path></svg>';
+        
+        // Update the title to include the icon on the right
+        const titleSpan = titleElement.querySelector('span');
+        if (titleSpan) {
+            titleSpan.innerHTML = `Upcoming Events <span class="ml-auto">${icon}</span>`;
+        }
+    } else {
+        // Reset to original title if no working location
+        const titleSpan = titleElement.querySelector('span');
+        if (titleSpan) {
+            titleSpan.innerHTML = 'Upcoming Events';
+        }
+    }
+}
+
+function separateEventTypes(events) {
+    const timedEvents = [];
+    const allDayEvents = [];
+    
+    events.forEach(event => {
+        if (event.isAllDay) {
+            // Include OOO and important all-day events
+            const summary = event.summary.toLowerCase();
+            if (summary.includes('ooo') || 
+                summary.includes('out of office') ||
+                summary.includes('vacation') ||
+                summary.includes('holiday') ||
+                summary.includes('sick') ||
+                summary.includes('pto')) {
+                allDayEvents.push(event);
+            }
+            // Don't include working location events in all-day display
+        } else {
+            // Only include timed events that aren't working location
+            const summary = event.summary.toLowerCase();
+            if (!summary.includes('working location') && 
+                !summary.includes('office') && 
+                !summary.includes('work from')) {
+                timedEvents.push(event);
+            }
+        }
+    });
+    
+    return { timedEvents, allDayEvents };
+}
+
 function formatToTime(dateStr) {
     if (!dateStr) return '';
     const date = new Date(dateStr);
@@ -60,12 +146,16 @@ function formatToTime(dateStr) {
 }
 
 function createEventBubbleHTML(event) {
+    const locationName = formatLocationName(event.location);
+    const locationDisplay = locationName ? 
+        `<span class="text-slate-400 font-light">&middot;</span>
+         <span class="event-details font-light truncate text-[1.3vh]">${locationName}</span>` : '';
+    
     return `<div class="event-bubble">
                     <p class="font-medium text-white text-[1.5vh] truncate">${event.summary}</p>
                     <div class="flex items-center text-slate-300 gap-2 mt-0.5">
                         <span class="event-details font-light whitespace-nowrap text-[1.3vh]">${formatTimeRange(event.startTime, event.endTime)}</span>
-                        <span class="text-slate-400 font-light">&middot;</span>
-                        <span class="event-details font-light truncate text-[1.3vh]">${formatLocationName(event.location)}</span>
+                        ${locationDisplay}
                     </div>
                 </div>`;
 }
