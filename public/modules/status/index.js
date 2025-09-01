@@ -66,48 +66,20 @@ export function createStatusManager(config, elements) {
         getPlaceholderImage(statusText) {
             // Use GitHub images from the organized folders
             const baseUrl = 'https://github.com/russellochoa/productivity-dashboard/raw/main/public/images';
+            const encodedFolder = encodeURIComponent(statusText);
             
-            // Map each status to its specific image file (based on what you uploaded)
-            const statusImages = {
-                // Primary Calendar Event Statuses
-                'In a Meeting': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                'In a Zoom Meeting': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                'Focus Time': 'Gemini_Generated_Image_psvgl5psvgl5psvg.png',
-                'Out at Lunch': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                'Out of Office': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                'Out Sick': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                'Overloaded Human': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                
-                // Easter Egg Statuses
-                'Too Many Meetings (warning)': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                'What a chill day today': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                
-                // Time-Based Fallback Statuses
-                'Booting Up… Breakfast First': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                'Working Out (Mentally and Physically)': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                'System Not Ready': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                'Starting the Day Strong': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                'Thoughts Loading… Please Wait': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                'Warming Up Slack Fingers': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                'Workday Shutdown in Progress': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                'Office Evacuation in Progress': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                'Logging Out IRL': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                'Goodbye Desk, Hello Couch': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                'Out for the Day — Try Again Tomorrow': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                'Do Not Disturb — Life in Progress': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                'Battery Depleted — Recharging': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
-                'Available': 'Gemini_Generated_Image_w8qe2sw8qe2sw8qe.png'
-            };
+            // Try to find any image in the status folder by trying common patterns
+            // This will work if you have any image file in each folder
+            const commonImageNames = [
+                'image.jpg', 'image.png', 'image.jpeg', 'image.gif',
+                '1.jpg', '1.png', '1.jpeg', '1.gif',
+                'img.jpg', 'img.png', 'img.jpeg', 'img.gif',
+                'photo.jpg', 'photo.png', 'photo.jpeg', 'photo.gif'
+            ];
             
-            const imageFile = statusImages[statusText];
-            if (imageFile) {
-                const encodedFolder = encodeURIComponent(statusText);
-                const encodedFile = encodeURIComponent(imageFile);
-                return `${baseUrl}/${encodedFolder}/${encodedFile}`;
-            }
-            
-            // Fallback to placeholder if no image found
-            return 'https://via.placeholder.com/400x300/868e96/ffffff?text=Default';
+            // For now, let's use a simple approach: assume each folder has an image.jpg
+            // You can rename your images to 'image.jpg' in each folder for this to work
+            return `${baseUrl}/${encodedFolder}/image.jpg`;
         },
 
         getCurrentFallbackStatus() {
