@@ -64,38 +64,50 @@ export function createStatusManager(config, elements) {
         },
 
         getPlaceholderImage(statusText) {
-            // Placeholder images - will be replaced with config system later
-            const placeholderImages = {
-                // Easter Egg Statuses
-                'Too Many Meetings (warning)': 'https://via.placeholder.com/400x300/ff6b6b/ffffff?text=Too+Many+Meetings',
-                'What a chill day today': 'https://via.placeholder.com/400x300/51cf66/ffffff?text=Chill+Day',
-                
+            // Use GitHub images from the organized folders
+            const baseUrl = 'https://github.com/russellochoa/productivity-dashboard/raw/main/public/images';
+            
+            // Map each status to its specific image file
+            const statusImages = {
                 // Primary Calendar Event Statuses
-                'In a Meeting': 'https://via.placeholder.com/400x300/4dabf7/ffffff?text=In+a+Meeting',
-                'In a Zoom Meeting': 'https://via.placeholder.com/400x300/339af0/ffffff?text=In+a+Zoom+Meeting',
-                'Focus Time': 'https://via.placeholder.com/400x300/51cf66/ffffff?text=Focus+Time',
-                'Out at Lunch': 'https://via.placeholder.com/400x300/ffd43b/ffffff?text=Out+at+Lunch',
-                'Out of Office': 'https://via.placeholder.com/400x300/ffa8a8/ffffff?text=Out+of+Office',
-                'Out Sick': 'https://via.placeholder.com/400x300/ff6b6b/ffffff?text=Out+Sick',
-                'Overloaded Human': 'https://via.placeholder.com/400x300/be4bdb/ffffff?text=Overloaded+Human',
+                'In a Meeting': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png',
+                'In a Zoom Meeting': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific zoom image later
+                'Focus Time': 'Gemini_Generated_Image_psvgl5psvgl5psvg.png',
+                'Out at Lunch': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific lunch image later
+                'Out of Office': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific OOO image later
+                'Out Sick': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific sick image later
+                'Overloaded Human': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific overloaded image later
+                
+                // Easter Egg Statuses
+                'Too Many Meetings (warning)': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific warning image later
+                'What a chill day today': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific chill image later
                 
                 // Time-Based Fallback Statuses
-                'Booting Up… Breakfast First': 'https://via.placeholder.com/400x300/ffd43b/ffffff?text=Early+Morning',
-                'Working Out (Mentally and Physically)': 'https://via.placeholder.com/400x300/ffd43b/ffffff?text=Early+Morning',
-                'System Not Ready': 'https://via.placeholder.com/400x300/ffd43b/ffffff?text=Early+Morning',
-                'Starting the Day Strong': 'https://via.placeholder.com/400x300/74c0fc/ffffff?text=Start+of+Day',
-                'Thoughts Loading… Please Wait': 'https://via.placeholder.com/400x300/74c0fc/ffffff?text=Start+of+Day',
-                'Warming Up Slack Fingers': 'https://via.placeholder.com/400x300/74c0fc/ffffff?text=Start+of+Day',
-                'Workday Shutdown in Progress': 'https://via.placeholder.com/400x300/ffa8a8/ffffff?text=End+of+Day',
-                'Office Evacuation in Progress': 'https://via.placeholder.com/400x300/ffa8a8/ffffff?text=End+of+Day',
-                'Logging Out IRL': 'https://via.placeholder.com/400x300/ffc078/ffffff?text=After+Work',
-                'Goodbye Desk, Hello Couch': 'https://via.placeholder.com/400x300/ffc078/ffffff?text=After+Work',
-                'Out for the Day — Try Again Tomorrow': 'https://via.placeholder.com/400x300/ffc078/ffffff?text=After+Work',
-                'Do Not Disturb — Life in Progress': 'https://via.placeholder.com/400x300/be4bdb/ffffff?text=Evening',
-                'Battery Depleted — Recharging': 'https://via.placeholder.com/400x300/be4bdb/ffffff?text=Evening',
-                'Available': 'https://via.placeholder.com/400x300/868e96/ffffff?text=Available'
+                'Booting Up… Breakfast First': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific early morning image later
+                'Working Out (Mentally and Physically)': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific workout image later
+                'System Not Ready': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific system image later
+                'Starting the Day Strong': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific start day image later
+                'Thoughts Loading… Please Wait': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific loading image later
+                'Warming Up Slack Fingers': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific slack image later
+                'Workday Shutdown in Progress': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific shutdown image later
+                'Office Evacuation in Progress': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific evacuation image later
+                'Logging Out IRL': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific logout image later
+                'Goodbye Desk, Hello Couch': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific goodbye image later
+                'Out for the Day — Try Again Tomorrow': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific out for day image later
+                'Do Not Disturb — Life in Progress': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific evening image later
+                'Battery Depleted — Recharging': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png', // You can add a specific battery image later
+                'Available': 'ChatGPT Image Aug 4, 2025, 02_36_39 AM.png' // You can add a specific available image later
             };
-            return placeholderImages[statusText] || 'https://via.placeholder.com/400x300/868e96/ffffff?text=Default';
+            
+            const imageFile = statusImages[statusText];
+            if (imageFile) {
+                const encodedFolder = encodeURIComponent(statusText);
+                const encodedFile = encodeURIComponent(imageFile);
+                return `${baseUrl}/${encodedFolder}/${encodedFile}`;
+            }
+            
+            // Fallback to placeholder if no image found
+            return 'https://via.placeholder.com/400x300/868e96/ffffff?text=Default';
         },
 
         getCurrentFallbackStatus() {
