@@ -80,12 +80,9 @@ export function createStatusManager(config, elements) {
             const containerWidth = titleElement.parentElement.offsetWidth;
             const textWidth = titleElement.scrollWidth;
             
-            console.log(`Text width: ${textWidth}, Container width: ${containerWidth}`);
-            
             // If text is wider than container, add sliding animation
             if (textWidth > containerWidth) {
                 titleElement.classList.add('sliding');
-                console.log('Added sliding animation');
             }
         },
 

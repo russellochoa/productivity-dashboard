@@ -228,33 +228,34 @@ body {
 .album-container img { transition: opacity 1.5s ease, transform 1.5s ease; }
 .album-container.transition-slide img { transition: transform 1s ease-in-out; }
 
-/* Status title sliding animation for long text */
+/* Status title scrolling animation for long text */
 #status-title {
     overflow: hidden;
     white-space: nowrap;
     position: relative;
+    width: 100%;
 }
 
 #status-title.sliding {
-    animation: slideText 8s ease-in-out infinite;
+    animation: scrollText 8s ease-in-out infinite;
 }
 
-/* Make the status module container allow overflow for sliding text */
-#status-module {
-    overflow: visible !important;
-}
-
-#status-module > div {
-    overflow: visible !important;
-}
-
-@keyframes slideText {
-    0% { transform: translateX(0); }
-    15% { transform: translateX(0); }
-    35% { transform: translateX(-50%); }
-    65% { transform: translateX(-50%); }
-    85% { transform: translateX(0); }
-    100% { transform: translateX(0); }
+@keyframes scrollText {
+    0% { 
+        transform: translateX(0);
+    }
+    25% { 
+        transform: translateX(0);
+    }
+    50% { 
+        transform: translateX(-60%);
+    }
+    75% { 
+        transform: translateX(-60%);
+    }
+    100% { 
+        transform: translateX(0);
+    }
 }
 .album-container.transition-zoom img.active { transform: scale(1.1); }
 
