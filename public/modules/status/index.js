@@ -59,14 +59,26 @@ export function createStatusManager(config, elements) {
         renderStatus(statusText) {
             elements.statusTitle.textContent = statusText;
             // Use GitHub images from organized folders
-            const imageUrl = this.getPlaceholderImage(statusText);
-            elements.statusImage.src = imageUrl;
+            this.loadStatusImage(statusText);
+        },
+
+        loadStatusImage(statusText) {
+            const extensions = ['png', 'jpg', 'jpeg'];
+            let currentIndex = 0;
             
-            // If .png fails, try .jpg as fallback
-            elements.statusImage.onerror = () => {
-                const fallbackUrl = this.getPlaceholderImage(statusText, 'jpg');
-                elements.statusImage.src = fallbackUrl;
+            const tryNextExtension = () => {
+                if (currentIndex < extensions.length) {
+                    const imageUrl = this.getPlaceholderImage(statusText, extensions[currentIndex]);
+                    elements.statusImage.src = imageUrl;
+                    currentIndex++;
+                }
             };
+            
+            // Try .png first
+            tryNextExtension();
+            
+            // Set up error handler to try next extension
+            elements.statusImage.onerror = tryNextExtension;
         },
 
         getPlaceholderImage(statusText, extension = 'png') {
