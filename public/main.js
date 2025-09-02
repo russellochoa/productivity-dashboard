@@ -3,6 +3,7 @@ import { createStatusManager, updateMasterStatus } from './modules/status/index.
 import { updateWeather } from './modules/weather/index.js';
 import { updateEvents } from './modules/events/index.js';
 import { createSlideshow } from './modules/slideshow/index.js';
+import { createAlbumManager } from './modules/albums/index.js';
 
 let lastQuote = null;
 let lastQuoteTime = 0;
@@ -60,6 +61,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     let activeIntervals = [];
     let currentCalendar = [];
     let statusManager;
+    let albumManager;
     let newsArticles = [];
     let newsIndex = 0;
     let currentMode = elements.newsMode ? elements.newsMode.value : 'headlines';
@@ -256,6 +258,10 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         statusManager = createStatusManager(config, elements);
         statusManager.init(); // Initialize the status manager
+        
+        albumManager = createAlbumManager(config, elements);
+        albumManager.init(); // Initialize the album manager
+        
         applyInitialConfig();
         updateClock();
 
@@ -282,5 +288,73 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 
+    // Album Management Event Handlers
+    function setupAlbumHandlers() {
+        // Add personal image from URL
+        const addPersonalBtn = document.getElementById('add-personal-image');
+        const personalUrlInput = document.getElementById('personal-image-url');
+        
+        if (addPersonalBtn && personalUrlInput) {
+            addPersonalBtn.addEventListener('click', () => {
+                const url = personalUrlInput.value.trim();
+                if (url && albumManager) {
+                    albumManager.addPersonalImage(url);
+                    personalUrlInput.value = '';
+                }
+            });
+            
+            personalUrlInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addPersonalBtn.click();
+                }
+            });
+        }
+
+        // Add company image from URL
+        const addCompanyBtn = document.getElementById('add-company-image');
+        const companyUrlInput = document.getElementById('company-image-url');
+        
+        if (addCompanyBtn && companyUrlInput) {
+            addCompanyBtn.addEventListener('click', () => {
+                const url = companyUrlInput.value.trim();
+                if (url && albumManager) {
+                    albumManager.addCompanyImage(url);
+                    companyUrlInput.value = '';
+                }
+            });
+            
+            companyUrlInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addCompanyBtn.click();
+                }
+            });
+        }
+
+        // Mobile image upload
+        const uploadBtn = document.getElementById('upload-mobile-images');
+        const fileInput = document.getElementById('mobile-image-upload');
+        
+        if (uploadBtn && fileInput) {
+            uploadBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', (e) => {
+                const files = Array.from(e.target.files);
+                files.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        if (albumManager) {
+                            albumManager.addPersonalImage(event.target.result);
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                });
+                fileInput.value = ''; // Reset input
+            });
+        }
+    }
+
+    setupAlbumHandlers();
     initializeApp();
 });

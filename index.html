@@ -127,6 +127,56 @@
                         </button>
                     </div>
                     
+                    <!-- Album Management Section -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-white mb-3">Photo Albums</h3>
+                        
+                        <!-- Personal Album -->
+                        <div class="mb-4">
+                            <h4 class="text-md font-medium text-slate-300 mb-2">Personal Photos</h4>
+                            <div class="space-y-2">
+                                <div class="flex gap-2">
+                                    <input type="url" id="personal-image-url" class="flex-1 px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Paste image URL here">
+                                    <button id="add-personal-image" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors">Add</button>
+                                </div>
+                                <div class="text-xs text-slate-400">
+                                    <p>• Paste image URLs from the internet</p>
+                                    <p>• Use "Add from Phone" button below for mobile photos</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Company Album -->
+                        <div class="mb-4">
+                            <h4 class="text-md font-medium text-slate-300 mb-2">Company Logos</h4>
+                            <div class="space-y-2">
+                                <div class="flex gap-2">
+                                    <input type="url" id="company-image-url" class="flex-1 px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Paste logo URL here">
+                                    <button id="add-company-image" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors">Add</button>
+                                </div>
+                                <div class="text-xs text-slate-400">
+                                    <p>• Add company logos, brand images, etc.</p>
+                                    <p>• Images will rotate automatically</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Upload -->
+                        <div class="mb-4">
+                            <h4 class="text-md font-medium text-slate-300 mb-2">Add from Phone</h4>
+                            <div class="space-y-2">
+                                <input type="file" id="mobile-image-upload" accept="image/*" multiple class="hidden">
+                                <button id="upload-mobile-images" class="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md transition-colors">
+                                    📱 Choose Photos from Phone
+                                </button>
+                                <div class="text-xs text-slate-400">
+                                    <p>• Select multiple photos at once</p>
+                                    <p>• Photos will be added to Personal Album</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- API Configuration Section -->
                     <div class="mb-6">
                         <h3 class="text-lg font-semibold text-white mb-3">API Configuration</h3>
