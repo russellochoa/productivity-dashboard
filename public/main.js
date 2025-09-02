@@ -256,8 +256,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     async function initializeApp() {
         stopAllIntervals();
 
+        console.log('Creating status manager...');
         statusManager = createStatusManager(config, elements);
+        console.log('Status manager created:', statusManager);
         statusManager.init(); // Initialize the status manager
+        console.log('Status manager initialized');
         
         albumManager = createAlbumManager(config, elements);
         albumManager.init(); // Initialize the album manager
@@ -283,8 +286,24 @@ document.addEventListener('DOMContentLoaded', async function() {
         activeIntervals.push(setInterval(fetchAllData, config.dataRefreshInterval));
         
         // Update status immediately and then every 5 seconds
-        updateMasterStatus(statusManager, currentCalendar);
-        activeIntervals.push(setInterval(() => updateMasterStatus(statusManager, currentCalendar), 5000));
+        console.log('About to call updateMasterStatus', { statusManager, currentCalendar });
+        try {
+            updateMasterStatus(statusManager, currentCalendar);
+        } catch (error) {
+            console.error('Error calling updateMasterStatus:', error);
+            // Fallback: call status manager directly
+            if (statusManager && statusManager.startFallbackRotation) {
+                console.log('Using fallback: calling statusManager.startFallbackRotation()');
+                statusManager.startFallbackRotation();
+            }
+        }
+        activeIntervals.push(setInterval(() => {
+            try {
+                updateMasterStatus(statusManager, currentCalendar);
+            } catch (error) {
+                console.error('Error in status update interval:', error);
+            }
+        }, 5000));
 
         if (config.infoModuleMode === 'rotate') {
             activeIntervals.push(setInterval(cycleInfoModule, 60000));
