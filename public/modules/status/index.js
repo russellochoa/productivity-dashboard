@@ -58,28 +58,24 @@ export function createStatusManager(config, elements) {
 
         renderStatus(statusText) {
             elements.statusTitle.textContent = statusText;
-            // Use placeholder image for now - will be replaced with config later
+            // Use GitHub images from organized folders
             const imageUrl = this.getPlaceholderImage(statusText);
             elements.statusImage.src = imageUrl;
+            
+            // If .png fails, try .jpg as fallback
+            elements.statusImage.onerror = () => {
+                const fallbackUrl = this.getPlaceholderImage(statusText, 'jpg');
+                elements.statusImage.src = fallbackUrl;
+            };
         },
 
-        getPlaceholderImage(statusText) {
+        getPlaceholderImage(statusText, extension = 'png') {
             // Use GitHub images from the organized folders
             const baseUrl = 'https://github.com/russellochoa/productivity-dashboard/raw/main/public/images';
             const encodedFolder = encodeURIComponent(statusText);
             
-            // Try to find any image in the status folder by trying common patterns
-            // This will work if you have any image file in each folder
-            const commonImageNames = [
-                'image.jpg', 'image.png', 'image.jpeg', 'image.gif',
-                '1.jpg', '1.png', '1.jpeg', '1.gif',
-                'img.jpg', 'img.png', 'img.jpeg', 'img.gif',
-                'photo.jpg', 'photo.png', 'photo.jpeg', 'photo.gif'
-            ];
-            
-            // For now, let's use a simple approach: assume each folder has an image.jpg
-            // You can rename your images to 'image.jpg' in each folder for this to work
-            return `${baseUrl}/${encodedFolder}/image.jpg`;
+            // Try the specified extension (.png or .jpg)
+            return `${baseUrl}/${encodedFolder}/image.${extension}`;
         },
 
         getCurrentFallbackStatus() {
