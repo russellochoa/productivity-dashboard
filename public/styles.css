@@ -239,16 +239,20 @@ body {
     animation: slideText 8s ease-in-out infinite;
 }
 
-/* Allow the parent container to show overflow for sliding text */
-#status-module .p-3 {
-    overflow: visible;
+/* Make the status module container allow overflow for sliding text */
+#status-module {
+    overflow: visible !important;
+}
+
+#status-module > div {
+    overflow: visible !important;
 }
 
 @keyframes slideText {
     0% { transform: translateX(0); }
     15% { transform: translateX(0); }
-    35% { transform: translateX(-40%); }
-    65% { transform: translateX(-40%); }
+    35% { transform: translateX(-50%); }
+    65% { transform: translateX(-50%); }
     85% { transform: translateX(0); }
     100% { transform: translateX(0); }
 }
