@@ -236,14 +236,14 @@ body {
 }
 
 #status-title.sliding {
-    animation: slideText 6s ease-in-out infinite;
+    animation: slideText 8s ease-in-out infinite;
 }
 
 @keyframes slideText {
     0% { transform: translateX(0); }
     15% { transform: translateX(0); }
-    35% { transform: translateX(-50%); }
-    65% { transform: translateX(-50%); }
+    35% { transform: translateX(-70%); }
+    65% { transform: translateX(-70%); }
     85% { transform: translateX(0); }
     100% { transform: translateX(0); }
 }

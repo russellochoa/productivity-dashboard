@@ -59,25 +59,33 @@ export function createStatusManager(config, elements) {
         renderStatus(statusText) {
             elements.statusTitle.textContent = statusText;
             
-            // Check if text is too long and add sliding animation
-            this.checkAndAddSlidingAnimation();
-            
             // Use GitHub images from organized folders
             this.loadStatusImage(statusText);
+            
+            // Check if text is too long and add sliding animation after a small delay
+            setTimeout(() => {
+                this.checkAndAddSlidingAnimation();
+            }, 100);
         },
 
         checkAndAddSlidingAnimation() {
             // Remove any existing sliding class
             elements.statusTitle.classList.remove('sliding');
             
+            // Force a reflow to get accurate measurements
+            elements.statusTitle.offsetHeight;
+            
             // Check if text overflows the container
             const titleElement = elements.statusTitle;
             const containerWidth = titleElement.parentElement.offsetWidth;
             const textWidth = titleElement.scrollWidth;
             
+            console.log(`Text width: ${textWidth}, Container width: ${containerWidth}`);
+            
             // If text is wider than container, add sliding animation
             if (textWidth > containerWidth) {
                 titleElement.classList.add('sliding');
+                console.log('Added sliding animation');
             }
         },
 
