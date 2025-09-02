@@ -236,15 +236,15 @@ body {
 }
 
 #status-title.sliding {
-    animation: slideText 8s ease-in-out infinite;
+    animation: slideText 6s ease-in-out infinite;
 }
 
 @keyframes slideText {
     0% { transform: translateX(0); }
-    20% { transform: translateX(0); }
-    40% { transform: translateX(-20%); }
-    60% { transform: translateX(-20%); }
-    80% { transform: translateX(0); }
+    15% { transform: translateX(0); }
+    35% { transform: translateX(-50%); }
+    65% { transform: translateX(-50%); }
+    85% { transform: translateX(0); }
     100% { transform: translateX(0); }
 }
 .album-container.transition-zoom img.active { transform: scale(1.1); }
