@@ -281,6 +281,9 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         activeIntervals.push(setInterval(updateClock, 1000));
         activeIntervals.push(setInterval(fetchAllData, config.dataRefreshInterval));
+        
+        // Update status immediately and then every 5 seconds
+        updateMasterStatus(statusManager, currentCalendar);
         activeIntervals.push(setInterval(() => updateMasterStatus(statusManager, currentCalendar), 5000));
 
         if (config.infoModuleMode === 'rotate') {

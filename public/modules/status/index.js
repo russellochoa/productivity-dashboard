@@ -220,6 +220,7 @@ export function createStatusManager(config, elements) {
 }
 
 export function updateMasterStatus(statusManager, currentCalendar) {
+    console.log('updateMasterStatus called', { statusManager, currentCalendar });
     const now = new Date();
     const timeSinceLastEgg = now.getTime() - statusManager.lastEasterEggTime;
 
