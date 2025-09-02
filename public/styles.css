@@ -227,5 +227,25 @@ body {
 
 .album-container img { transition: opacity 1.5s ease, transform 1.5s ease; }
 .album-container.transition-slide img { transition: transform 1s ease-in-out; }
+
+/* Status title sliding animation for long text */
+#status-title {
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+}
+
+#status-title.sliding {
+    animation: slideText 8s ease-in-out infinite;
+}
+
+@keyframes slideText {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(0); }
+    40% { transform: translateX(-20%); }
+    60% { transform: translateX(-20%); }
+    80% { transform: translateX(0); }
+    100% { transform: translateX(0); }
+}
 .album-container.transition-zoom img.active { transform: scale(1.1); }
 
