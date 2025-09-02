@@ -69,16 +69,19 @@ export function createStatusManager(config, elements) {
             const tryNextExtension = () => {
                 if (currentIndex < extensions.length) {
                     const imageUrl = this.getPlaceholderImage(statusText, extensions[currentIndex]);
+                    console.log(`Trying image: ${imageUrl} (extension: ${extensions[currentIndex]})`);
                     elements.statusImage.src = imageUrl;
                     currentIndex++;
+                } else {
+                    console.log('All extensions tried, no image found');
                 }
             };
             
-            // Try .png first
-            tryNextExtension();
-            
-            // Set up error handler to try next extension
+            // Set up error handler to try next extension BEFORE first attempt
             elements.statusImage.onerror = tryNextExtension;
+            
+            // Try .png first (index 0)
+            tryNextExtension();
         },
 
         getPlaceholderImage(statusText, extension = 'png') {
