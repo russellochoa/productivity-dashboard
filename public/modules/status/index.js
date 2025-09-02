@@ -84,7 +84,41 @@ export function createStatusManager(config, elements) {
         getPlaceholderImage(statusText, extension = 'png') {
             // Use GitHub images from the organized folders
             const baseUrl = 'https://github.com/russellochoa/productivity-dashboard/raw/main/public/images';
-            const encodedFolder = encodeURIComponent(statusText);
+            
+            // Map status text to actual folder names
+            const statusToFolderMap = {
+                // Primary Calendar Event Statuses
+                'In a Meeting': 'In a Meeting',
+                'In a Zoom Meeting': 'In a Zoom Meeting',
+                'Focus Time': 'Focus Time',
+                'Out at Lunch': 'Out at Lunch',
+                'Out of Office': 'Out of Office',
+                'Out Sick': 'Out Sick',
+                'Overloaded Human': 'Overloaded Human',
+                
+                // Easter Egg Statuses
+                'Too Many Meetings (warning)': 'Too Many Meetings (warning)',
+                'What a chill day today': 'What a chill day today',
+                
+                // Time-Based Fallback Statuses
+                'Booting Up… Breakfast First': 'Booting Up Breakfast First',
+                'Working Out (Mentally and Physically)': 'Working Out (Mentally and Physically)',
+                'System Not Ready': 'System Not Ready',
+                'Starting the Day Strong': 'Starting the Day Strong',
+                'Thoughts Loading… Please Wait': 'Thoughts Loading Please Wait',
+                'Warming Up Slack Fingers': 'Warming Up Slack Fingers',
+                'Workday Shutdown in Progress': 'Workday Shutdown in Progress',
+                'Office Evacuation in Progress': 'Office Evacuation in Progress',
+                'Logging Out IRL': 'Logging Out IRL',
+                'Goodbye Desk, Hello Couch': 'Goodbye Desk, Hello Couch',
+                'Out for the Day — Try Again Tomorrow': 'Out for the Day  Try Again Tomorrow',
+                'Do Not Disturb — Life in Progress': 'Do Not Disturb  Life in Progress',
+                'Battery Depleted — Recharging': 'Battery Depleted  Recharging',
+                'Available': 'Available'
+            };
+            
+            const folderName = statusToFolderMap[statusText] || statusText;
+            const encodedFolder = encodeURIComponent(folderName);
             
             // Try the specified extension (.png or .jpg)
             return `${baseUrl}/${encodedFolder}/image.${extension}`;
