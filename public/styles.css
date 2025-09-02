@@ -240,21 +240,35 @@ body {
     animation: scrollText 8s ease-in-out infinite;
 }
 
+/* Make the parent container allow overflow when sliding */
+#status-module .p-3 {
+    overflow: visible;
+}
+
 @keyframes scrollText {
     0% { 
         transform: translateX(0);
+        width: 100%;
     }
-    25% { 
+    20% { 
         transform: translateX(0);
+        width: 100%;
     }
-    50% { 
-        transform: translateX(-60%);
+    40% { 
+        transform: translateX(-50%);
+        width: 200%;
     }
-    75% { 
-        transform: translateX(-60%);
+    60% { 
+        transform: translateX(-50%);
+        width: 200%;
+    }
+    80% { 
+        transform: translateX(0);
+        width: 100%;
     }
     100% { 
         transform: translateX(0);
+        width: 100%;
     }
 }
 .album-container.transition-zoom img.active { transform: scale(1.1); }

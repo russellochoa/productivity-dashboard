@@ -355,6 +355,47 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 
+    // Settings Panel Functionality
+    function setupSettingsPanel() {
+        const settingsPanel = document.getElementById('settings-panel');
+        const closeSettings = document.getElementById('close-settings');
+        const profileImage = document.getElementById('profile-image');
+        
+        // Open settings when profile image is clicked
+        if (profileImage) {
+            profileImage.addEventListener('click', () => {
+                settingsPanel.classList.remove('hidden');
+                // Animate panel in
+                setTimeout(() => {
+                    settingsPanel.querySelector('.absolute').classList.remove('translate-x-full');
+                }, 10);
+            });
+        }
+        
+        // Close settings
+        if (closeSettings) {
+            closeSettings.addEventListener('click', closeSettingsPanel);
+        }
+        
+        // Close settings when clicking outside
+        if (settingsPanel) {
+            settingsPanel.addEventListener('click', (e) => {
+                if (e.target === settingsPanel) {
+                    closeSettingsPanel();
+                }
+            });
+        }
+        
+        function closeSettingsPanel() {
+            const panel = settingsPanel.querySelector('.absolute');
+            panel.classList.add('translate-x-full');
+            setTimeout(() => {
+                settingsPanel.classList.add('hidden');
+            }, 300);
+        }
+    }
+
     setupAlbumHandlers();
+    setupSettingsPanel();
     initializeApp();
 });
