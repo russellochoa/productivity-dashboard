@@ -69,11 +69,8 @@ export function createStatusManager(config, elements) {
             const tryNextExtension = () => {
                 if (currentIndex < extensions.length) {
                     const imageUrl = this.getPlaceholderImage(statusText, extensions[currentIndex]);
-                    console.log(`Trying image: ${imageUrl} (extension: ${extensions[currentIndex]})`);
                     elements.statusImage.src = imageUrl;
                     currentIndex++;
-                } else {
-                    console.log('All extensions tried, no image found');
                 }
             };
             
