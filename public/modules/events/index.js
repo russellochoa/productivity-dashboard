@@ -29,12 +29,23 @@ export async function updateEvents(config, elements, fetchWithMock, activeInterv
             };
         });
         
+        // Filter events for today only
+        const today = new Date();
+        const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const endOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+        
+        const todaysEvents = currentCalendar.filter(event => {
+            const eventStart = new Date(event.start.dateTime || event.start.date);
+            return eventStart >= startOfToday && eventStart < endOfToday;
+        });
+        
         // Filter out working location events and separate all-day events
-        const { timedEvents, allDayEvents, workingLocationEvents } = separateEventTypes(currentCalendar);
+        const { timedEvents, allDayEvents, workingLocationEvents } = separateEventTypes(todaysEvents);
         
         // Debug logging
         console.log('Events processing:', {
             total: currentCalendar.length,
+            todaysEvents: todaysEvents.length,
             timed: timedEvents.length,
             allDay: allDayEvents.length,
             workingLocation: workingLocationEvents.length,
