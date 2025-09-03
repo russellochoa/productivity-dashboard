@@ -300,20 +300,12 @@ export function updateMasterStatus(statusManager, currentCalendar) {
 // Helper function to get current event
 function getCurrentEvent(calendar, now) {
     return calendar.find(event => {
+        // Skip all-day events (they should only be used for working location icons)
+        const isAllDay = !event.start.dateTime && event.start.date;
+        if (isAllDay) return false;
+        
         const eventStart = new Date(event.start.dateTime || event.start.date);
         const eventEnd = new Date(event.end.dateTime || event.end.date);
-        
-        // Debug logging to see what's happening
-        console.log('Checking event:', {
-            title: event.summary,
-            start: event.start.dateTime || event.start.date,
-            end: event.end.dateTime || event.end.date,
-            eventStart: eventStart.toLocaleString(),
-            eventEnd: eventEnd.toLocaleString(),
-            now: now.toLocaleString(),
-            isCurrent: now >= eventStart && now < eventEnd
-        });
-        
         return now >= eventStart && now < eventEnd;
     });
 }
