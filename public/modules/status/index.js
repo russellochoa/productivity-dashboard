@@ -220,7 +220,6 @@ export function createStatusManager(config, elements) {
 }
 
 export function updateMasterStatus(statusManager, currentCalendar) {
-    console.log('updateMasterStatus called', { statusManager, currentCalendar });
     const now = new Date();
     const timeSinceLastEgg = now.getTime() - statusManager.lastEasterEggTime;
 
@@ -297,7 +296,7 @@ export function updateMasterStatus(statusManager, currentCalendar) {
 function getCurrentEvent(calendar, now) {
     return calendar.find(event => {
         const eventStart = new Date(event.start.dateTime || event.start.date);
-        const eventEnd = new Date(event.end.dateTime || event.start.date);
+        const eventEnd = new Date(event.end.dateTime || event.end.date);
         return now >= eventStart && now < eventEnd;
     });
 }

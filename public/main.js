@@ -256,11 +256,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     async function initializeApp() {
         stopAllIntervals();
 
-        console.log('Creating status manager...');
         statusManager = createStatusManager(config, elements);
-        console.log('Status manager created:', statusManager);
         statusManager.init(); // Initialize the status manager
-        console.log('Status manager initialized');
         
         albumManager = createAlbumManager(config, elements);
         albumManager.init(); // Initialize the album manager
@@ -286,14 +283,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         activeIntervals.push(setInterval(fetchAllData, config.dataRefreshInterval));
         
         // Update status immediately and then every 5 seconds
-        console.log('About to call updateMasterStatus', { statusManager, currentCalendar });
         try {
             updateMasterStatus(statusManager, currentCalendar);
         } catch (error) {
             console.error('Error calling updateMasterStatus:', error);
             // Fallback: call status manager directly
             if (statusManager && statusManager.startFallbackRotation) {
-                console.log('Using fallback: calling statusManager.startFallbackRotation()');
                 statusManager.startFallbackRotation();
             }
         }
@@ -414,6 +409,18 @@ document.addEventListener('DOMContentLoaded', async function() {
             setTimeout(() => {
                 settingsPanel.classList.add('hidden');
             }, 300);
+        }
+
+        // Reset settings button
+        const resetButton = document.getElementById('reset-settings');
+        if (resetButton) {
+            resetButton.addEventListener('click', () => {
+                // Clear localStorage
+                localStorage.removeItem('personalAlbumImages');
+                localStorage.removeItem('companyAlbumImages');
+                // Refresh the page to reset everything
+                location.reload();
+            });
         }
     }
 

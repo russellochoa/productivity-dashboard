@@ -172,6 +172,11 @@ body {
     flex-shrink: 0;
     transition: flex-basis 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
+
+.event-bubble.current-event {
+    background-color: #4dffa82b;
+    border: 1px solid rgba(77, 255, 168, 0.3);
+}
 .event-group .event-bubble {
      flex-basis: 33.33%;
      flex-grow: 1;

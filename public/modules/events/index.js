@@ -29,8 +29,18 @@ export async function updateEvents(config, elements, fetchWithMock, activeInterv
             };
         });
         
+        // Filter events for today only
+        const today = new Date();
+        const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+        const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+        
+        const todaysEvents = currentCalendar.filter(event => {
+            const eventStart = new Date(event.start.dateTime || event.start.date);
+            return eventStart >= startOfDay && eventStart < endOfDay;
+        });
+        
         // Filter out working location events and separate all-day events
-        const { timedEvents, allDayEvents, workingLocationEvents } = separateEventTypes(currentCalendar);
+        const { timedEvents, allDayEvents, workingLocationEvents } = separateEventTypes(todaysEvents);
         
         // Debug logging
         console.log('Events processing:', {
@@ -154,7 +164,17 @@ function createEventBubbleHTML(event) {
         `<span class="text-slate-400 font-light">&middot;</span>
          <span class="event-details font-light truncate text-[1.3vh]">${locationName}</span>` : '';
     
-    return `<div class="event-bubble">
+    // Check if this is a current event
+    const now = new Date();
+    const eventStart = new Date(event.startTime);
+    const eventEnd = new Date(event.endTime);
+    const isCurrentEvent = now >= eventStart && now < eventEnd;
+    
+    const bubbleClass = isCurrentEvent ? 
+        'event-bubble current-event' : 
+        'event-bubble';
+    
+    return `<div class="${bubbleClass}">
                     <p class="font-medium text-white text-[1.5vh] truncate">${event.summary}</p>
                     <div class="flex items-center text-slate-300 gap-2 mt-0.5">
                         <span class="event-details font-light whitespace-nowrap text-[1.3vh]">${formatTimeRange(event.startTime, event.endTime)}</span>
