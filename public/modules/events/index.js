@@ -35,7 +35,7 @@ export async function updateEvents(config, elements, fetchWithMock, activeInterv
         const endOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
         
         const todaysEvents = currentCalendar.filter(event => {
-            const eventStart = new Date(event.start.dateTime || event.start.date);
+            const eventStart = event.start; // Already a Date object from processing
             return eventStart >= startOfToday && eventStart < endOfToday;
         });
         
