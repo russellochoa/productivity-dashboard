@@ -77,6 +77,10 @@ export async function updateEvents(config, elements, fetchWithMock, activeInterv
         } else if (allDayEvents.length === 0) {
             elements.eventsList.innerHTML = '<li class="text-slate-300 text-center p-4">No upcoming events.</li>';
         }
+        
+        // Update current event highlighting
+        updateCurrentEventHighlighting();
+        
         return data?.items || [];
     } catch (error) {
         console.error('Events fetch error:', error);
@@ -167,7 +171,7 @@ function createEventBubbleHTML(event) {
         'event-bubble current-event' : 
         'event-bubble';
     
-    return `<div class="${bubbleClass}">
+    return `<div class="${bubbleClass}" data-event-start="${event.start.toISOString()}" data-event-end="${event.end.toISOString()}">
                     <p class="font-medium text-white text-[1.5vh] truncate">${event.summary}</p>
                     <div class="flex items-center text-slate-300 gap-2 mt-0.5">
                         <span class="event-details font-light whitespace-nowrap text-[1.3vh]">${formatTimeRange(event.startTime, event.endTime)}</span>
@@ -232,3 +236,30 @@ function formatLocationName(location) {
     }
     return location;
 }
+
+function updateCurrentEventHighlighting() {
+    const now = new Date();
+    const eventBubbles = document.querySelectorAll('.event-bubble');
+    
+    eventBubbles.forEach(bubble => {
+        // Remove current highlighting first
+        bubble.classList.remove('current-event');
+        
+        // Get event data from data attributes if available
+        const eventStart = bubble.dataset.eventStart;
+        const eventEnd = bubble.dataset.eventEnd;
+        
+        if (eventStart && eventEnd) {
+            const startTime = new Date(eventStart);
+            const endTime = new Date(eventEnd);
+            
+            // Check if event is currently active
+            if (now >= startTime && now < endTime) {
+                bubble.classList.add('current-event');
+            }
+        }
+    });
+}
+
+// Make function available globally
+window.updateCurrentEventHighlighting = updateCurrentEventHighlighting;

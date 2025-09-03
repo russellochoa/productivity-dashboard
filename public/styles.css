@@ -242,7 +242,7 @@ body {
 }
 
 #status-title.sliding {
-    animation: scrollText 8s ease-in-out infinite;
+    animation: scrollText 12s ease-in-out infinite;
 }
 
 /* Make the parent container allow overflow when sliding */
@@ -255,21 +255,17 @@ body {
         transform: translateX(0);
         width: 100%;
     }
-    20% { 
+    25% { 
         transform: translateX(0);
         width: 100%;
     }
-    40% { 
-        transform: translateX(-50%);
-        width: 200%;
+    50% { 
+        transform: translateX(-25%);
+        width: 150%;
     }
-    60% { 
-        transform: translateX(-50%);
-        width: 200%;
-    }
-    80% { 
-        transform: translateX(0);
-        width: 100%;
+    75% { 
+        transform: translateX(-25%);
+        width: 150%;
     }
     100% { 
         transform: translateX(0);

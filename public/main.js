@@ -295,6 +295,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         activeIntervals.push(setInterval(() => {
             try {
                 updateMasterStatus(statusManager, currentCalendar);
+                // Update current event highlighting
+                if (window.updateCurrentEventHighlighting) {
+                    window.updateCurrentEventHighlighting();
+                }
             } catch (error) {
                 console.error('Error in status update interval:', error);
             }
