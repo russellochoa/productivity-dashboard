@@ -225,8 +225,11 @@ export function updateMasterStatus(statusManager, currentCalendar) {
     
     const timeSinceLastEgg = now.getTime() - statusManager.lastEasterEggTime;
 
-    // Check for easter eggs every 20 minutes (1200000 ms)
-    if (timeSinceLastEgg > 20 * 60 * 1000) {
+    // Check for easter eggs every 20 minutes (1200000 ms) and only during work hours (9 AM - 5 PM)
+    const currentHour = now.getHours();
+    const isWorkHours = currentHour >= 9 && currentHour < 17;
+    
+    if (timeSinceLastEgg > 20 * 60 * 1000 && isWorkHours) {
         // Calculate meeting count and free time for the day
         const dayStart = new Date(now);
         dayStart.setHours(9, 0, 0, 0); // 9 AM
