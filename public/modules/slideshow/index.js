@@ -4,6 +4,13 @@ export async function createSlideshow(container, settings, photosUrl, fetchWithM
     if (!imageList && Array.isArray(data)) {
         imageList = data.map(photo => photo.urls?.regular).filter(Boolean);
     }
+    
+    // Add local images to the slideshow
+    const localImages = getLocalImages(container);
+    if (localImages.length > 0) {
+        imageList = imageList ? [...localImages, ...imageList] : localImages;
+    }
+    
     if (!imageList || !imageList.length) return;
 
     if (settings.order === 'random') imageList.sort(() => Math.random() - 0.5);
@@ -32,4 +39,26 @@ export async function createSlideshow(container, settings, photosUrl, fetchWithM
 
     showNextImage();
     activeIntervals.push(setInterval(showNextImage, settings.rotateSpeed));
+}
+
+function getLocalImages(container) {
+    const localImages = [];
+    
+    // Check if this is the personal album container
+    if (container.id === 'personal-album-container' || 
+        container.classList.contains('personal-album') ||
+        container.querySelector('[data-album="personal"]')) {
+        // Add personal hiking image
+        localImages.push('https://github.com/russellochoa/productivity-dashboard/raw/main/public/images/personal/hiking.jpg');
+    }
+    
+    // Check if this is the company album container
+    if (container.id === 'company-album-container' || 
+        container.classList.contains('company-album') ||
+        container.querySelector('[data-album="company"]')) {
+        // Add company logo
+        localImages.push('https://github.com/russellochoa/productivity-dashboard/raw/main/public/images/company/logo.png');
+    }
+    
+    return localImages;
 }
