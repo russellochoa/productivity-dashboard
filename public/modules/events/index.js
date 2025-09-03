@@ -29,36 +29,16 @@ export async function updateEvents(config, elements, fetchWithMock, activeInterv
             };
         });
         
-        // Filter events for today and upcoming events
-        const now = new Date();
-        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        
-        const upcomingEvents = currentCalendar.filter(event => {
-            const eventStart = new Date(event.start.dateTime || event.start.date);
-            // Include events that start today OR are in the future
-            return eventStart >= startOfToday;
-        });
-        
         // Filter out working location events and separate all-day events
-        const { timedEvents, allDayEvents, workingLocationEvents } = separateEventTypes(upcomingEvents);
+        const { timedEvents, allDayEvents, workingLocationEvents } = separateEventTypes(currentCalendar);
         
         // Debug logging
         console.log('Events processing:', {
             total: currentCalendar.length,
-            upcomingEvents: upcomingEvents.length,
             timed: timedEvents.length,
             allDay: allDayEvents.length,
             workingLocation: workingLocationEvents.length,
-            allUpcomingEvents: upcomingEvents.map(e => ({
-                title: e.summary,
-                start: e.start?.dateTime || e.start?.date,
-                end: e.end?.dateTime || e.end?.date
-            })),
-            timedEventsDetailed: timedEvents.map(e => ({
-                title: e.summary,
-                start: e.startTime,
-                end: e.endTime
-            }))
+            workingLocationEvents: workingLocationEvents.map(e => e.summary)
         });
         
         // Update the title with working location icon
@@ -94,7 +74,7 @@ export async function updateEvents(config, elements, fetchWithMock, activeInterv
         } else if (allDayEvents.length === 0) {
             elements.eventsList.innerHTML = '<li class="text-slate-300 text-center p-4">No upcoming events.</li>';
         }
-        return data?.items || [];
+        return currentCalendar;
     } catch (error) {
         console.error('Events fetch error:', error);
         elements.eventsList.innerHTML = '<li class="text-slate-300 text-center p-4">Error loading events.</li>';
