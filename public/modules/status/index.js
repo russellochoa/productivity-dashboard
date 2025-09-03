@@ -318,14 +318,14 @@ function getStatusFromEvent(event, calendar) {
                         event.hangoutLink || 
                         event.conferenceData?.entryPoints?.some(ep => ep.entryPointType === 'video');
 
-    // Check for special event types first
-    if (eventType === 'outOfOffice' || title.includes('ooo')) {
-        return 'Out of Office';
-    }
-
-    // Check for specific title patterns
+    // Check for specific title patterns (SICK has priority over OOO)
     if (title.includes('sick')) {
         return 'Out Sick';
+    }
+
+    // Check for special event types
+    if (eventType === 'outOfOffice' || title.includes('ooo')) {
+        return 'Out of Office';
     }
     if (title.includes('lunch')) {
         return 'Out at Lunch';

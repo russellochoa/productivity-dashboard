@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const config = {
         dashboardTitle: "Russell's Desk",
         profileImageUrl: "https://www.dropbox.com/scl/fi/7fsfrr4yixqmmh0i0p67p/C2E599B7-FF0F-4740-8EB0-BD57C60723AB.jpg?rlkey=pawp5kwzu81n1hrqzxxric8lm&st=b2yrbs29&raw=1",
-        dataRefreshInterval: 15 * 60 * 1000,
+        dataRefreshInterval: 5 * 60 * 1000, // 5 minutes instead of 15
         infoModuleMode: 'rotate',
         activeInfoModule: 'quote',
         quoteUrl: apiConfig.quoteUrl,
