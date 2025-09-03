@@ -42,15 +42,7 @@ export async function updateEvents(config, elements, fetchWithMock, activeInterv
         // Filter out working location events and separate all-day events
         const { timedEvents, allDayEvents, workingLocationEvents } = separateEventTypes(todaysEvents);
         
-        // Debug logging
-        console.log('Events processing:', {
-            total: currentCalendar.length,
-            todaysEvents: todaysEvents.length,
-            timed: timedEvents.length,
-            allDay: allDayEvents.length,
-            workingLocation: workingLocationEvents.length,
-            workingLocationEvents: workingLocationEvents.map(e => e.summary)
-        });
+        // Debug logging removed for production
         
         // Update the title with working location icon
         updateWorkingLocationIcon(workingLocationEvents);
