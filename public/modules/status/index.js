@@ -221,6 +221,16 @@ export function createStatusManager(config, elements) {
 
 export function updateMasterStatus(statusManager, currentCalendar) {
     const now = new Date();
+    console.log('Status Debug:', {
+        currentTime: now.toLocaleTimeString(),
+        totalEvents: currentCalendar?.length || 0,
+        events: currentCalendar?.map(e => ({
+            title: e.summary,
+            start: e.start?.dateTime || e.start?.date,
+            end: e.end?.dateTime || e.end?.date
+        })) || []
+    });
+    
     const timeSinceLastEgg = now.getTime() - statusManager.lastEasterEggTime;
 
     // Check for easter eggs every 20 minutes (1200000 ms)

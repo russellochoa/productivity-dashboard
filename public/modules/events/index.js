@@ -84,7 +84,7 @@ export async function updateEvents(config, elements, fetchWithMock, activeInterv
         } else if (allDayEvents.length === 0) {
             elements.eventsList.innerHTML = '<li class="text-slate-300 text-center p-4">No upcoming events.</li>';
         }
-        return currentCalendar;
+        return data?.items || [];
     } catch (error) {
         console.error('Events fetch error:', error);
         elements.eventsList.innerHTML = '<li class="text-slate-300 text-center p-4">Error loading events.</li>';
@@ -166,8 +166,8 @@ function createEventBubbleHTML(event) {
     
     // Check if this is a current event
     const now = new Date();
-    const eventStart = new Date(event.startTime);
-    const eventEnd = new Date(event.endTime);
+    const eventStart = event.start; // Already a Date object
+    const eventEnd = event.end; // Already a Date object
     const isCurrentEvent = now >= eventStart && now < eventEnd;
     
     const bubbleClass = isCurrentEvent ? 
