@@ -29,27 +29,27 @@ export async function updateEvents(config, elements, fetchWithMock, activeInterv
             };
         });
         
-        // Filter events for today only
-        const today = new Date();
-        const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-        const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+        // Filter events for today and upcoming events
+        const now = new Date();
+        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         
-        const todaysEvents = currentCalendar.filter(event => {
+        const upcomingEvents = currentCalendar.filter(event => {
             const eventStart = new Date(event.start.dateTime || event.start.date);
-            return eventStart >= startOfDay && eventStart < endOfDay;
+            // Include events that start today OR are in the future
+            return eventStart >= startOfToday;
         });
         
         // Filter out working location events and separate all-day events
-        const { timedEvents, allDayEvents, workingLocationEvents } = separateEventTypes(todaysEvents);
+        const { timedEvents, allDayEvents, workingLocationEvents } = separateEventTypes(upcomingEvents);
         
         // Debug logging
         console.log('Events processing:', {
             total: currentCalendar.length,
-            todaysEvents: todaysEvents.length,
+            upcomingEvents: upcomingEvents.length,
             timed: timedEvents.length,
             allDay: allDayEvents.length,
             workingLocation: workingLocationEvents.length,
-            allTodaysEvents: todaysEvents.map(e => ({
+            allUpcomingEvents: upcomingEvents.map(e => ({
                 title: e.summary,
                 start: e.start?.dateTime || e.start?.date,
                 end: e.end?.dateTime || e.end?.date
