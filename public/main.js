@@ -422,6 +422,32 @@ document.addEventListener('DOMContentLoaded', async function() {
                 location.reload();
             });
         }
+
+        // Status info modal
+        const statusInfoButton = document.getElementById('status-info-button');
+        const statusInfoModal = document.getElementById('status-info-modal');
+        const closeStatusInfo = document.getElementById('close-status-info');
+        
+        if (statusInfoButton && statusInfoModal) {
+            statusInfoButton.addEventListener('click', () => {
+                statusInfoModal.classList.remove('hidden');
+            });
+        }
+        
+        if (closeStatusInfo && statusInfoModal) {
+            closeStatusInfo.addEventListener('click', () => {
+                statusInfoModal.classList.add('hidden');
+            });
+        }
+        
+        // Close modal when clicking outside
+        if (statusInfoModal) {
+            statusInfoModal.addEventListener('click', (e) => {
+                if (e.target === statusInfoModal) {
+                    statusInfoModal.classList.add('hidden');
+                }
+            });
+        }
     }
 
     setupAlbumHandlers();

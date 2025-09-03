@@ -45,10 +45,20 @@ export async function updateEvents(config, elements, fetchWithMock, activeInterv
         // Debug logging
         console.log('Events processing:', {
             total: currentCalendar.length,
+            todaysEvents: todaysEvents.length,
             timed: timedEvents.length,
             allDay: allDayEvents.length,
             workingLocation: workingLocationEvents.length,
-            workingLocationEvents: workingLocationEvents.map(e => e.summary)
+            allTodaysEvents: todaysEvents.map(e => ({
+                title: e.summary,
+                start: e.start?.dateTime || e.start?.date,
+                end: e.end?.dateTime || e.end?.date
+            })),
+            timedEventsDetailed: timedEvents.map(e => ({
+                title: e.summary,
+                start: e.startTime,
+                end: e.endTime
+            }))
         });
         
         // Update the title with working location icon
