@@ -5,13 +5,21 @@ export async function createSlideshow(container, settings, photosUrl, fetchWithM
         imageList = data.map(photo => photo.urls?.regular).filter(Boolean);
     }
     
-    // Add local images to the slideshow
-    const localImages = getLocalImages(container);
-    if (localImages.length > 0) {
-        imageList = imageList ? [...localImages, ...imageList] : localImages;
+    // Add Cloudinary images to the slideshow
+    const cloudinaryImages = await getCloudinaryImages(container);
+    if (cloudinaryImages.length > 0) {
+        imageList = imageList ? [...cloudinaryImages, ...imageList] : cloudinaryImages;
     }
     
-    if (!imageList || !imageList.length) return;
+    // Fallback to local images if no Cloudinary images
+    if (!imageList || !imageList.length) {
+        const localImages = getLocalImages(container);
+        if (localImages.length > 0) {
+            imageList = localImages;
+        } else {
+            return;
+        }
+    }
 
     if (settings.order === 'random') imageList.sort(() => Math.random() - 0.5);
 
@@ -39,6 +47,31 @@ export async function createSlideshow(container, settings, photosUrl, fetchWithM
 
     showNextImage();
     activeIntervals.push(setInterval(showNextImage, settings.rotateSpeed));
+}
+
+async function getCloudinaryImages(container) {
+    try {
+        // Determine album type based on container
+        let albumType = 'personal'; // default
+        
+        if (container.id === 'company-album-container' || 
+            container.classList.contains('company-album') ||
+            container.querySelector('[data-album="company"]')) {
+            albumType = 'company';
+        }
+        
+        const response = await fetch(`https://prod-dash-proxy.vercel.app/api/albums?albumType=${albumType}`);
+        const data = await response.json();
+        
+        if (data.success && data.images) {
+            return data.images.map(img => img.url);
+        }
+        
+        return [];
+    } catch (error) {
+        console.error('Error fetching Cloudinary images:', error);
+        return [];
+    }
 }
 
 function getLocalImages(container) {
