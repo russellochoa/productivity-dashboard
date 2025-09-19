@@ -9,6 +9,11 @@ app.use(express.static('.'));
 
 app.get('/api/news', newsProxy);
 
+// Settings page route
+app.get('/settings', (req, res) => {
+  res.sendFile('settings.html', { root: '.' });
+});
+
 app.get('/api/proxy', async (req, res) => {
   const targetUrl = req.query.url;
   if (!targetUrl) {
