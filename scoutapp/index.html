@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>ScoutLink Football Network</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="antialiased">
+  <div id="app" class="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
+    <header class="relative overflow-hidden">
+      <div class="pointer-events-none" aria-hidden="true">
+        <div class="absolute -top-32 -left-32 h-[420px] w-[420px] rounded-full bg-emerald-500/40 blur-3xl"></div>
+        <div class="absolute top-16 right-0 h-[360px] w-[360px] rounded-full bg-sky-500/25 blur-3xl"></div>
+        <div class="absolute bottom-[-120px] left-1/2 h-[460px] w-[460px] -translate-x-1/2 rounded-full bg-emerald-400/20 blur-3xl"></div>
+      </div>
+      <div class="relative">
+        <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 text-xs uppercase tracking-[0.3em] text-slate-400">
+          <span class="text-emerald-200">ScoutLink</span>
+          <div class="flex items-center gap-5">
+            <span>Beta build</span>
+            <span>v0.1.0</span>
+          </div>
+        </nav>
+        <div class="mx-auto max-w-7xl px-6 pb-16">
+          <div class="grid items-center gap-12 lg:grid-cols-[1.45fr_1fr]">
+            <div class="space-y-10">
+              <p class="text-xs font-semibold uppercase tracking-[0.6em] text-emerald-300">Football talent network</p>
+              <h1 class="text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl">Connect scouts &amp; players in one electric locker room.</h1>
+              <p id="hero-subtitle" class="max-w-2xl text-lg text-slate-300">Discover rising stars, manage relationships, and keep your shortlists ready for the next transfer window.</p>
+              <div class="flex flex-wrap gap-3">
+                <button class="role-button" data-role="scout" data-role-toggle>I'm scouting talent</button>
+                <button class="role-button role-button--ghost" data-role="player" data-role-toggle>I'm showcasing my game</button>
+              </div>
+              <div class="grid gap-4 border-t border-emerald-500/25 pt-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div class="stat-block">
+                  <p class="stat-label">Verified prospects</p>
+                  <p class="stat-value">126</p>
+                  <p class="stat-sub">Updated daily</p>
+                </div>
+                <div class="stat-block">
+                  <p class="stat-label">Clubs on platform</p>
+                  <p class="stat-value">48</p>
+                  <p class="stat-sub">Across 6 leagues</p>
+                </div>
+                <div class="stat-block">
+                  <p class="stat-label">Highlight minutes streamed</p>
+                  <p class="stat-value">2.4k</p>
+                  <p class="stat-sub">Last 30 days</p>
+                </div>
+              </div>
+            </div>
+            <div class="glass-board space-y-5">
+              <div>
+                <h3 class="text-xs uppercase tracking-[0.5em] text-emerald-200">Match center</h3>
+                <p class="mt-2 text-sm text-slate-300">Keep tabs on combines, showcases, and club needs.</p>
+              </div>
+              <div class="grid gap-4">
+                <div class="match-card">
+                  <p class="match-card__label">Next showcase</p>
+                  <p class="match-card__title">Texas Elite Combine &mdash; Jun 14</p>
+                  <p class="match-card__meta">32 players &middot; 18 scouts confirmed</p>
+                </div>
+                <div class="match-card">
+                  <p class="match-card__label">Transfer window focus</p>
+                  <p class="match-card__title">MLS U22 Initiative Targets</p>
+                  <p class="match-card__meta">8 open roster spots &middot; 3 strikers prioritized</p>
+                </div>
+                <div class="grid gap-3 rounded-3xl border border-emerald-500/25 bg-emerald-500/10 p-5 text-slate-100 shadow-[0_22px_60px_rgba(16,185,129,0.25)]">
+                  <p class="text-xs uppercase tracking-[0.4em] text-emerald-100">Signal strength</p>
+                  <p class="text-2xl font-semibold">Live interest alerts engaged</p>
+                  <p class="text-xs text-emerald-100/80">Get notified when scouts follow, shortlist, or request contact details.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="relative z-10 mx-auto flex w-full max-w-7xl flex-col gap-16 px-6 pb-24">
+      <section id="account-center" class="relative">
+        <div class="glass-card grid gap-10 p-8 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
+          <div>
+            <div class="flex flex-wrap items-center gap-4">
+              <span id="account-role-chip" class="role-chip">Scout workspace</span>
+              <span class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.35em] text-slate-400">
+                <span id="account-status-dot" class="block h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
+                <span id="account-status">Active</span>
+              </span>
+            </div>
+            <h2 class="mt-6 text-3xl font-semibold text-white">Account control center</h2>
+            <p id="account-summary" class="mt-3 max-w-2xl text-sm text-slate-300">Manage your plan, access, and communication limits in one place. Downgrade when a recruiting cycle slows down, then reactivate instantly before the next window opens.</p>
+            <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div class="mini-panel">
+                <p class="mini-panel__label">Current tier</p>
+                <p id="account-tier" class="mini-panel__value">Elite</p>
+              </div>
+              <div class="mini-panel">
+                <p class="mini-panel__label">Saved prospects</p>
+                <p id="account-saved-count" class="mini-panel__value">0</p>
+                <p class="mini-panel__hint">Synced across your staff</p>
+              </div>
+              <div class="mini-panel">
+                <p class="mini-panel__label">Prospect capacity</p>
+                <p id="account-capacity" class="mini-panel__value">Unlimited</p>
+                <p class="mini-panel__hint">Based on active tier</p>
+              </div>
+            </div>
+            <div class="mt-6 flex flex-wrap gap-3">
+              <button id="degrade-account" class="btn-primary">Downgrade to Competitive</button>
+              <button id="restore-account" class="btn-outline hidden">Reactivate Elite tier</button>
+            </div>
+            <p id="account-impact" class="mt-4 text-xs uppercase tracking-[0.35em] text-emerald-200">Full networking privileges engaged</p>
+          </div>
+          <div class="flex flex-col gap-6">
+            <div class="glass-subcard">
+              <h3 class="text-xs uppercase tracking-[0.45em] text-slate-400">Account timeline</h3>
+              <ul id="degrade-history" class="mt-4 space-y-3 text-sm text-slate-300">
+                <li class="text-slate-500">No changes recorded yet — you're running the Elite tier.</li>
+              </ul>
+            </div>
+            <div class="glass-subcard">
+              <h3 class="text-xs uppercase tracking-[0.45em] text-slate-400">Workspace toggle</h3>
+              <div class="mt-4 flex flex-wrap gap-3">
+                <button class="role-switch" data-role="scout" data-role-toggle>Scout mode</button>
+                <button class="role-switch role-switch--ghost" data-role="player" data-role-toggle>Player mode</button>
+              </div>
+              <p class="mt-3 text-xs text-slate-400">Switch roles to tailor messaging, hero copy, and metrics across the experience.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="network" class="relative">
+        <div class="flex flex-wrap items-end justify-between gap-6">
+          <div class="max-w-3xl space-y-3">
+            <p class="text-xs font-semibold uppercase tracking-[0.55em] text-emerald-300">Player discovery lab</p>
+            <h2 class="text-3xl font-semibold text-white">Verified soccer profiles with highlight reels and advanced metrics.</h2>
+            <p class="text-sm text-slate-300">Filter, review, and track prospects. Save them to your notebook, jot quick notes, and deliver messages without leaving the workspace.</p>
+          </div>
+          <div class="rounded-3xl border border-emerald-500/25 bg-emerald-500/10 px-6 py-4 text-sm text-emerald-100 shadow-[0_15px_45px_rgba(16,185,129,0.2)]">
+            <p class="uppercase tracking-[0.4em]">Live feed</p>
+            <p class="mt-1 text-xs text-emerald-100/80">4 new clips added in the last 24 hours</p>
+          </div>
+        </div>
+
+        <div class="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1.7fr)_minmax(0,1.1fr)]">
+          <aside class="glass-card p-6">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <h3 class="text-lg font-semibold text-white">Prospect board</h3>
+                <p class="text-sm text-slate-400">Tap a profile to load the full report.</p>
+              </div>
+              <span class="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs uppercase tracking-[0.35em] text-emerald-100">Live</span>
+            </div>
+            <div class="mt-6 grid gap-4 text-xs uppercase tracking-[0.4em] text-slate-400">
+              <label class="filter-label">Position
+                <select id="filter-position" class="filter-input mt-2">
+                  <option value="all">All positions</option>
+                  <option value="forward">Forwards</option>
+                  <option value="midfield">Midfielders</option>
+                  <option value="defense">Defenders</option>
+                  <option value="goalkeeper">Goalkeepers</option>
+                </select>
+              </label>
+              <label class="filter-label">Preferred foot
+                <select id="filter-foot" class="filter-input mt-2">
+                  <option value="all">Any</option>
+                  <option value="right">Right</option>
+                  <option value="left">Left</option>
+                </select>
+              </label>
+              <label class="filter-label">Search
+                <input id="filter-search" type="search" placeholder="Name, club, style..." class="filter-input mt-2">
+              </label>
+            </div>
+            <div id="player-list" class="mt-6 flex flex-col gap-4"></div>
+          </aside>
+
+          <article id="player-detail" class="glass-card p-6">
+            <header class="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <p id="detail-position" class="text-xs uppercase tracking-[0.45em] text-emerald-200">Select a profile</p>
+                <h3 id="detail-name" class="mt-2 text-3xl font-semibold text-white">No player selected</h3>
+                <p id="detail-location" class="mt-2 text-sm text-slate-400">Choose a player from the prospect board to load their scouting report.</p>
+              </div>
+              <div class="text-right">
+                <p id="detail-availability" class="text-xs uppercase tracking-[0.45em] text-emerald-200"></p>
+                <p id="detail-updated" class="mt-2 text-xs text-slate-500"></p>
+              </div>
+            </header>
+
+            <div id="highlight-container" class="highlight-shell mt-6">
+              <div class="flex flex-col items-center justify-center text-center text-sm text-slate-400">
+                <span class="text-lg font-semibold text-slate-300">Highlight hub</span>
+                <span class="mt-1 text-xs uppercase tracking-[0.4em] text-slate-500">Select a player to load match footage</span>
+              </div>
+            </div>
+
+            <div id="detail-stats" class="detail-stats mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3"></div>
+            <div id="player-tags" class="mt-6 flex flex-wrap gap-2"></div>
+
+            <section class="mt-6 space-y-3">
+              <h4 class="section-title">Scouting report</h4>
+              <p id="detail-bio" class="text-sm leading-relaxed text-slate-300"></p>
+              <ul id="detail-highlight-notes" class="space-y-2 text-sm text-slate-300"></ul>
+            </section>
+
+            <section class="mt-6 grid gap-5 lg:grid-cols-2">
+              <div>
+                <h4 class="section-title">Key metrics</h4>
+                <dl id="detail-metrics" class="grid gap-3 text-sm text-slate-200"></dl>
+              </div>
+              <div>
+                <h4 class="section-title">Representation</h4>
+                <ul id="detail-contact" class="space-y-2 text-sm text-slate-300"></ul>
+              </div>
+            </section>
+
+            <section class="mt-6">
+              <h4 class="section-title">Recent honors</h4>
+              <ul id="detail-honors" class="mt-3 grid gap-2 text-sm text-emerald-200 sm:grid-cols-2"></ul>
+            </section>
+
+            <section class="mt-6">
+              <h4 class="section-title">Upcoming fixtures</h4>
+              <ul id="detail-fixtures" class="mt-3 grid gap-3 text-sm text-slate-300 sm:grid-cols-2"></ul>
+            </section>
+
+            <div class="mt-8 flex flex-wrap gap-3">
+              <button id="save-prospect" class="btn-primary" disabled>Save to notebook</button>
+              <button id="open-message" class="btn-outline" disabled>Compose message</button>
+            </div>
+          </article>
+
+          <aside class="flex flex-col gap-6">
+            <section class="glass-card p-6">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <h3 class="text-lg font-semibold text-white">Scout notebook</h3>
+                  <p class="text-sm text-slate-400">Bookmark prospects and leave context for your staff.</p>
+                </div>
+                <span id="saved-count" class="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs uppercase tracking-[0.35em] text-emerald-100">0 saved</span>
+              </div>
+              <div id="saved-empty" class="mt-6 rounded-2xl border border-dashed border-emerald-500/30 bg-slate-950/60 p-6 text-center text-sm text-slate-400">
+                Save a player to build your recruitment list.
+              </div>
+              <div id="saved-prospects" class="mt-6 flex flex-col gap-4"></div>
+            </section>
+
+            <section class="glass-card p-6">
+              <h3 class="text-lg font-semibold text-white">Direct outreach</h3>
+              <p id="messaging-availability" class="mt-2 text-xs uppercase tracking-[0.35em] text-emerald-200">Messaging open to the entire player pool.</p>
+              <form id="message-form" class="mt-6 space-y-4">
+                <label class="filter-label">Player
+                  <select id="message-player" class="filter-input mt-2"></select>
+                </label>
+                <label class="filter-label">Channel
+                  <select id="message-channel" class="filter-input mt-2">
+                    <option value="Direct Message">Direct Message</option>
+                    <option value="Email Intro">Email Intro</option>
+                    <option value="WhatsApp Call">WhatsApp Call</option>
+                  </select>
+                </label>
+                <label class="filter-label">Subject
+                  <input id="message-subject" type="text" placeholder="Intro: Summer trials" class="filter-input mt-2">
+                </label>
+                <label class="filter-label">Message
+                  <textarea id="message-body" rows="4" placeholder="Share who you are, your interest, and next steps." class="filter-input mt-2 h-32 resize-none"></textarea>
+                </label>
+                <button id="submit-message" type="submit" class="btn-primary w-full">Send scouting message</button>
+                <p id="message-feedback" class="hidden text-xs text-emerald-200" role="status">Message staged for delivery.</p>
+              </form>
+              <div class="mt-6">
+                <h4 class="section-title">Recent outreach</h4>
+                <ul id="message-history" class="mt-3 space-y-3 text-sm text-slate-300">
+                  <li class="text-slate-500">No messages yet. Reach out to a prospect to populate this feed.</li>
+                </ul>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="relative border-t border-slate-800/60 bg-slate-950/80 py-10">
+      <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-6 text-xs uppercase tracking-[0.35em] text-slate-500">
+        <span>&copy; 2024 ScoutLink Labs</span>
+        <span>Designed for the beautiful game</span>
+        <span>v0.1.0 &middot; Beta</span>
+      </div>
+    </footer>
+  </div>
+
+  <div id="toast-shell" class="toast-shell hidden" aria-live="polite" aria-atomic="true">
+    <div id="toast-content" class="toast-content">Status message</div>
+  </div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
